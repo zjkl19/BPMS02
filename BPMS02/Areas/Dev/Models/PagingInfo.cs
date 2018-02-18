@@ -13,9 +13,11 @@ namespace BPMS02.Areas.Dev.Models
     public class PagingInfo
     {
         public int TotalItems { get; set; }
-        [Range(1,int.MaxValue)]
+        [Range(1,int.MaxValue, ErrorMessage = "请输入合理的数值")]
+        [Required]
         public int ItemsPerPage { get; set; }
-        [Range(1, int.MaxValue)]
+        [Range(1, int.MaxValue, ErrorMessage = "请输入合理的数值")]
+        [Required]
         public int CurrentPage { get; set; }
         public int TotalPages
         {

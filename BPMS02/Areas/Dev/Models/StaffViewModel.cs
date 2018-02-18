@@ -39,6 +39,7 @@ namespace BPMS02.Areas.Dev.Models
         public Education Education { get; set; }
 
         [Display(Name = "入职日期")]
+        [DataType(DataType.Date)]
         public DateTime HiredDate { get; set; }
     }
     public enum Gender

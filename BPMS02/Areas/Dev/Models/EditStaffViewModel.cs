@@ -14,6 +14,7 @@ namespace BPMS02.Areas.Dev.Models
         public Guid Id { get; set; }
 
         [Display(Name = "工号")]
+        [System.ComponentModel.ReadOnly(true)]
         public int No { get; set; }
 
         [Required(ErrorMessage = "请输入{0}.")]
@@ -25,9 +26,11 @@ namespace BPMS02.Areas.Dev.Models
         [Display(Name = "性别")]
         public Gender Gender { get; set; }
 
+        [Required(ErrorMessage = "请输入{0}.")]
         [Display(Name = "办公电话")]
         public string OfficePhone { get; set; }
 
+        [Required(ErrorMessage = "请输入{0}.")]
         [Display(Name = "移动电话")]
         public string MobilePhone { get; set; }
 
@@ -41,6 +44,7 @@ namespace BPMS02.Areas.Dev.Models
         public Education Education { get; set; }
 
         [Required(ErrorMessage = "请输入入职日期.")]
+        [DataType(DataType.Date)]
         [Display(Name = "入职日期")]
         public DateTime HiredDate { get; set; }
 

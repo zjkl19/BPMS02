@@ -140,7 +140,8 @@ namespace BPMS02.Areas.Dev.Controllers
         {
             int page;
             int pageSize;
-            if (ModelState.IsValid)
+            
+            if (ModelState.IsValid  && TryValidateModel(vm.PagingInfo))
             {
                 page = vm.PagingInfo.CurrentPage;
                 pageSize = vm.PagingInfo.ItemsPerPage;
