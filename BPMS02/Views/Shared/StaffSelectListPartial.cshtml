@@ -1,0 +1,91 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model BPMS02.ViewModels.StaffSelectListViewModel
+
+@{
+    int i = 1;
+
+    var headerMetadata = Model.StaffSelectViewModels.FirstOrDefault();
+
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                <!-- RadioBox -->
+            </th>
+            <th>
+                <!-- Id -->
+            </th>
+            <th>
+                序号
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => headerMetadata.No)
+            </th>
+
+            <th>
+                @Html.DisplayNameFor(model => headerMetadata.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => headerMetadata.Position)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => headerMetadata.JobTitle)
+            </th>
+
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach (var item in Model.StaffSelectViewModels)
+        {
+        <tr>
+            <td>
+                @Html.RadioButtonFor(modelItem => item.Id, false)
+            </td>
+            <td style="display: none">
+                @Html.DisplayFor(modelItem => item.Id)
+            </td>
+            <td>
+                @i
+                @{
+            i++;
+                }
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.No)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Position)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.JobTitle)
+            </td>
+        </tr>
+
+        }
+    </tbody>
+</table>
+
+    <form  asp-area="" asp-controller="Staff" asp-action="List"
+          data-ajax="true"
+          data-ajax-mode="replace"
+          data-ajax-loading="#loading"
+          data-ajax-loading-duration=1000
+          data-ajax-update="#ajaxSelectStaffBody"
+          method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <!-- Input and Submit elements -->
+        每页显示<input asp-for="PagingInfo.ItemsPerPage" style="width:50px"> 条,当前第@{@Html.DisplayFor(p => p.PagingInfo.CurrentPage)}页,共@{@Html.DisplayFor(p => p.PagingInfo.TotalItems)}条记录,共@{@Html.DisplayFor(p => p.PagingInfo.TotalPages)}页, 第<input asp-for="PagingInfo.CurrentPage" style="width:50px"> 页,<button type="submit">Go</button>
+        <span asp-validation-for="PagingInfo.ItemsPerPage" class="text-danger"></span>
+        <span asp-validation-for="PagingInfo.CurrentPage" class="text-danger"></span>
+    </form>
+
+

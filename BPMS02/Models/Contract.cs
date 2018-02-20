@@ -90,12 +90,17 @@ namespace BPMS02.Models
         /// <summary>
         /// 1份合同只能由1位职工承接
         /// </summary>
+        [ForeignKey("AcceptContracts")]
+        public Guid AcceptStaffId { get; set; }
         [InverseProperty("AcceptContracts")]
         public virtual Staff AcceptStaff { get; set; }
+
 
         /// <summary>
         /// 1份合同只能由1位职工负责
         /// </summary>
+        [ForeignKey("ResponseContracts")]
+        public Guid ResponseStaffId { get; set; }
         [InverseProperty("ResponseContracts")]
         public virtual Staff ResponseStaff { get; set; }
 

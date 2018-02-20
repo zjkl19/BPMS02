@@ -12,6 +12,7 @@ namespace BPMS02.Data
         //https://docs.microsoft.com/en-us/aspnet/core/data/ef-mvc/intro
         public static void Initialize(DataContext context)
         {
+
             context.Database.EnsureCreated();
 
             // Look for any students.
@@ -52,7 +53,7 @@ namespace BPMS02.Data
                     No=528,
                     Name="李鹏",
                     Gender=Convert.ToInt32(Gender.male),
-                    OfficePhone="1",
+                    OfficePhone="0591-12345678",
                     MobilePhone="1",
                     Position=Convert.ToInt32(Position.viceManager),
                     JobTitle=Convert.ToInt32(JobTitle.engineer),
@@ -139,7 +140,84 @@ namespace BPMS02.Data
             }
             context.SaveChanges();
 
-        
+            InitContract(context, staffs);
+
+        }
+
+        public static void InitContract(DataContext context,Staff[] staffs)
+        {
+            context.Database.EnsureCreated();
+
+            // Look for any students.
+            if (context.Contracts.Any())
+            {
+                return;   // DB has been seeded
+            }
+
+            var contracts = new Contract[]
+            {
+                new Contract{
+                    Id=Guid.NewGuid(),
+                    No="HT02CB1600200",
+                    Name="莆田市x桥外观检查",
+                    Amount=100000,
+                    SignedDate=DateTime.Parse("2016-03-01"),
+                    Deadline=30,
+                    PromisedDeadline=28,
+                    JobContent="1、上部结构外观检查;2、下部结构外观检查",
+                    ProjectLocation="莆田",
+                    Client="莆田市建设局",
+                    ClientContactPerson="李工",
+                    ClientContactPersonPhone="15804001234",
+                    AcceptWay=(int)(AcceptWay.bid),
+                    SignStatus=(int)(SignStatus.clientSigned),
+                    AcceptStaff=staffs[0],
+                    ResponseStaff=staffs[1]
+                },
+                new Contract{
+                    Id=Guid.NewGuid(),
+                    No="HT02CB1700201",
+                    Name="福州市x桥荷载试验",
+                    Amount=200000,
+                    SignedDate=DateTime.Parse("2017-03-01"),
+                    Deadline=40,
+                    PromisedDeadline=35,
+                    JobContent="1、桥梁动载试验;2、桥梁静载试验",
+                    ProjectLocation="福州",
+                    Client="福州市政工程管理处桥梁管理所",
+                    ClientContactPerson="张三",
+                    ClientContactPersonPhone="13904001111",
+                    AcceptWay=(int)(AcceptWay.delegation),
+                    SignStatus=(int)(SignStatus.clientSigned),
+                    AcceptStaff=staffs[2],
+                    ResponseStaff=staffs[3]
+                },
+                new Contract{
+                    Id=Guid.NewGuid(),
+                    No="HT02CB1800201",
+                    Name="宁德市x桥常规定期检测",
+                    Amount=300000,
+                    SignedDate=DateTime.Parse("2018-03-25"),
+                    Deadline=60,
+                    PromisedDeadline=50,
+                    JobContent="1、桥梁常规定期检测",
+                    ProjectLocation="宁德",
+                    Client="宁德市公路局",
+                    ClientContactPerson="李工",
+                    ClientContactPersonPhone="13812344321",
+                    AcceptWay=(int)(AcceptWay.discussion),
+                    SignStatus=(int)(SignStatus.corpSigned),
+                    AcceptStaff=staffs[3],
+                    ResponseStaff=staffs[4]
+                }
+            };
+            foreach (Contract c in contracts)
+            {
+                context.Contracts.Add(c);
+            }
+            context.SaveChanges();
+
         }
     }
 }
+

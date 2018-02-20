@@ -10,11 +10,24 @@
 <div class="row">
     <div class="col-lg-3 col-md-6 col-sm-9 col-xs-12">
         <a class="btn btn-danger" asp-area="Dev" asp-controller="Database" asp-action="Initialize">数据库初始化</a>
+
+        <div class="btn-group">
+            <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown">
+                数据库管理
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+                <li><a class="btn btn-danger" href="#">初始化职工数据</a></li>
+                <li><a class="btn btn-danger" href="#">初始化合同数据</a></li>
+                <li><a class="btn btn-danger" href="#">初始化所有数据</a></li>
+            </ul>
+        </div>
+
     </div>
     <div class="col-lg-3 col-md-6 col-sm-9 col-xs-12">
         <a class="btn btn-primary">数据库备份</a>
     </div>
-    </div>
+</div>
 
 
 
@@ -24,7 +37,7 @@
         <a class="btn btn-primary" asp-area="Dev" asp-controller="Staff" asp-action="Index">职工管理</a>
     </div>
     <div class="col-lg-3 col-md-6 col-sm-9 col-xs-12">
-        <a class="btn btn-primary">合同管理</a>
+        <a class="btn btn-primary" asp-area="Dev" asp-controller="Contract" asp-action="Index">合同管理</a>
         <br>
         <a class="btn btn-primary">合同发票管理</a>
         <br>
@@ -37,6 +50,6 @@
         <br>
         <a class="btn btn-primary">项目参与人员管理</a>
     </div>
-    </div>
+</div>
 
 

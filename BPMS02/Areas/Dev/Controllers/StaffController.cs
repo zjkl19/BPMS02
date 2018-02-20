@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using BPMS02.IRepository;
 using BPMS02.Areas.Dev.Models;
 using BPMS02.Models;
-using Microsoft.Extensions.Options;
+
+
 using BPMS02.Data;
+using Microsoft.Extensions.Options;
+using BPMS02.IRepository;
 using Microsoft.EntityFrameworkCore;
 
 namespace BPMS02.Areas.Dev.Controllers
@@ -34,7 +36,6 @@ namespace BPMS02.Areas.Dev.Controllers
             return View();
         }
 
-        //xxx.Select(x=>x).Count() 
         public async Task<IActionResult> CheckNo([Bind(include:"No")]CreateStaffViewModel model)
         {
             string message = null;
@@ -49,7 +50,6 @@ namespace BPMS02.Areas.Dev.Controllers
                 return Json(true);
             }
             
-
         }
 
 
@@ -90,7 +90,7 @@ namespace BPMS02.Areas.Dev.Controllers
             {
 
                 // Log the error(uncomment ex variable name and write a log.
-                ModelState.AddModelError("", "无法保存更改。 " +
+                ModelState.AddModelError("", "无法新建。 " +
                  "请重试, 如果该问题仍然存在 " +
                  "请联系系统管理员。");
             }
