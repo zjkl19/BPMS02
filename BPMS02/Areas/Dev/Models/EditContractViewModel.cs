@@ -10,11 +10,12 @@ using BPMS02.Models;
 
 namespace BPMS02.Areas.Dev.Models
 {
-    public class CreateContractViewModel
+    public class EditContractViewModel
     {
+        [ScaffoldColumn(false)]
+        public Guid Id { get; set; }
 
         [Required]
-        [Remote(action: "VerifyContractNo", controller: "Contract")]
         [Display(Name = "合同编号")]
         public string No { get; set; }
 

@@ -1,0 +1,8 @@
+version: '3'
+
+services:
+  bpms02:
+    image: bpms02
+    build:
+      context: .
+      dockerfile: BPMS02\Dockerfile

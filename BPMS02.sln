@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27004.2009
+VisualStudioVersion = 15.0.27130.2027
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BPMS02", "BPMS02\BPMS02.csproj", "{7C57050F-A631-41BB-B599-CB6DCDE951BF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BPMS02", "BPMS02\BPMS02.csproj", "{7C57050F-A631-41BB-B599-CB6DCDE951BF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

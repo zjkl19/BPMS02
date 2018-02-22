@@ -12,6 +12,14 @@ namespace BPMS02.Repository
     public class ContractRepository:IContractRepository
     {
         private DataContext context;
+
+        public Task<List<Contract>> Contracts
+        {
+            get
+            {
+                return context.Contracts.ToListAsync();
+            }
+        }
         public ContractRepository(DataContext _context)
         {
             context = _context;

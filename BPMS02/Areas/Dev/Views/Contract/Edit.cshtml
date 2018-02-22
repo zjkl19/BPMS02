@@ -1,39 +1,12 @@
-﻿@model BPMS02.Areas.Dev.Models.CreateContractViewModel
+﻿@model BPMS02.Areas.Dev.Models.EditContractViewModel
 @using BPMS02.Areas.Dev.Models
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Edit";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+
 <script>
-    //获取id,工号,姓名
-    $(document).ready(function () {
-        $('#selectAcceptStaffButton').on('click', function () {
-            Id = $(":input:radio:checked").map(function () {
-                return $(this).parent().siblings('td').eq(0).text();  // 根据checkbox定位到后面的td，然后使用text()函数获取内容
-            }).get();   // 获取内容数组并拼接为字符串
-
-            No = $(":input:radio:checked").map(function () {
-                return $(this).parent().siblings('td').eq(2).text();
-            }).get();
-
-            Name = $(":input:radio:checked").map(function () {
-                return $(this).parent().siblings('td').eq(3).text();
-            }).get();
-
-
-            $("#AcceptStaffId").attr("value", $.trim(Id));
-            //alert($("#staff_id").val());
-
-
-            $("#AcceptStaffName").attr("value", Name);
-            //alert($("#staff_name").val());
-            console.log(Id)
-            console.log(No)
-            console.log(Name)
-
-        });
-    });
 
     $(document).ready(function () {
         $('#selectStaffButton').on('click', function () {
@@ -55,15 +28,14 @@
             var itemId
             var itemName
 
-            if (item == 'selectAcceptStaffButton')
-            { 
+            if (item == 'selectAcceptStaffButton') {
                 itemId = "#AcceptStaffId";
                 itemName = "#AcceptStaffName";
             }
-            else { 
+            else {
                 itemId = "#ResponseStaffId";
                 itemName = "#ResponseStaffName";
-            } 
+            }
 
             console.log(itemId)
             console.log(itemName)
@@ -91,22 +63,19 @@
             // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
             var modal = $(this)
 
-            console.log(recipient)  //调试
-            console.log($(":button.btn.btn-primary").attr("data-whatever"))    //before
-
             modal.find(':button.btn.btn-primary').attr("data-whatever", recipient)
 
-            console.log($(":button.btn.btn-primary").attr("data-whatever"))
         })
     });
 </script>
 
-<h2>添加合同</h2>
+<h2>编辑</h2>
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
+        <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
             <div class="form-group">
                 <label asp-for="No" class="control-label"></label>
                 <input asp-for="No" class="form-control" />
@@ -139,7 +108,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="JobContent" class="control-label"></label>
-                <textarea asp-for="JobContent" class="form-control" /></textarea>
+                <textarea asp-for="JobContent" class="form-control" />@Html.DisplayFor(x=>x.JobContent)</textarea>
                 <span asp-validation-for="JobContent" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -191,7 +160,7 @@
             </div>
 
             <div class="form-group">
-                <input type="submit" value="添加" class="btn btn-default" />
+                <input type="submit" value="编辑" class="btn btn-default" />
             </div>
         </form>
     </div>
@@ -212,7 +181,8 @@
             <div class="modal-body">
                 <div class="container-fluid">
                     <div class="row">
-                        @Html.Partial("StaffSelectQueryPartial")
+                        @Html.Partial("StaffSelectQueryPartial",new BPMS02.ViewModels.StaffSelectQuery())
+
                     </div>
                     <div id="ajaxSelectStaffBody" class="row">
 

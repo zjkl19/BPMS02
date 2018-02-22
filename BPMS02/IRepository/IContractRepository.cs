@@ -8,6 +8,8 @@ namespace BPMS02.IRepository
 {
     public interface IContractRepository
     {
+        Task<List<Contract>> Contracts { get; }
+
         Task CreateAsync(Contract contract);
 
         Task<List<Contract>> ListAsync();
