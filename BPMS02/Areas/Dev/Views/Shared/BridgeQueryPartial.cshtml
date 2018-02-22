@@ -1,0 +1,17 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model BPMS02.Areas.Dev.Models.BridgeQuery
+
+<div class="row">
+    <form asp-area="Dev" asp-controller="Bridge" asp-action="QueryByName"
+          data-ajax="true"
+          data-ajax-mode="replace"
+          data-ajax-loading="#loading"
+          data-ajax-loading-duration=1000
+          data-ajax-update="#ajaxBridgeBody"
+          method="post">
+        <label asp-for="Name"> </label><input asp-for="Name" />
+        <button type="submit">按桥梁名称查询</button>
+    </form>
+</div>

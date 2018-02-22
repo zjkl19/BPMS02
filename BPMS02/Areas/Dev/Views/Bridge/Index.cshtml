@@ -1,0 +1,39 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div>
+    <h3>桥梁管理</h3>
+</div>
+
+<div class="clearfix" style="margin-bottom: 10px;"></div><!-- 清除浮动 -->
+
+<div class="row">
+    <a asp-action="Create" target="_blank">添加新桥梁</a>
+</div>
+<div class="clearfix" style="margin-bottom: 10px;"></div>
+
+
+<div class="row">
+   @Html.Partial("BridgeQueryPartial", new BPMS02.Areas.Dev.Models.BridgeQuery())
+</div>
+<div class="clearfix" style="margin-bottom: 10px;"></div>
+
+<div class="row">
+    <form asp-area="Dev" asp-controller="Bridge" asp-action="List"
+          data-ajax="true"
+          data-ajax-mode="replace"
+          data-ajax-loading="#loading"
+          data-ajax-loading-duration=1000
+          data-ajax-update="#ajaxBridgeBody"
+          method="get">
+        <button type="submit">查看所有桥梁</button>
+    </form>
+
+</div>
+
+<div id="ajaxBridgeBody" class="row">
+
+</div>

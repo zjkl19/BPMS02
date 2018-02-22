@@ -20,7 +20,7 @@ namespace BPMS02.IRepository
 
         Task<List<Contract>> QueryByNameAsync(string Name);
 
-        Task EditAsync(Contract staff);
+        Task EditAsync(Contract contract);
 
         Task<Contract> DeleteContract(Guid Id);
     }

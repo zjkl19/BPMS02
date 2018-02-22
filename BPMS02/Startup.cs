@@ -37,6 +37,7 @@ namespace BPMS02
             //Register application services.
             services.AddScoped<IStaffRepository, StaffRepository>();
             services.AddScoped<IContractRepository, ContractRepository>();
+            services.AddScoped<IBridgeRepository, BridgeRepository>();
 
             services.AddMvc();
         }
