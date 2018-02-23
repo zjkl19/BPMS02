@@ -145,15 +145,15 @@ namespace BPMS02.Areas.Dev.Controllers
         }
 
         [HttpPost]
-        public async Task<PartialViewResult> List(ContractListViewModel vm)
+        public async Task<PartialViewResult> List(PagingInfo pagingInfo)
         {
             int page;
             int pageSize;
 
-            if (ModelState.IsValid && TryValidateModel(vm.PagingInfo))
+            if (ModelState.IsValid && TryValidateModel(pagingInfo))
             {
-                page = vm.PagingInfo.CurrentPage;
-                pageSize = vm.PagingInfo.ItemsPerPage;
+                page = pagingInfo.CurrentPage;
+                pageSize = pagingInfo.ItemsPerPage;
             }
             else
             {

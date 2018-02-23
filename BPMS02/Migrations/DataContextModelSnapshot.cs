@@ -50,7 +50,7 @@ namespace BPMS02.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<Guid?>("AcceptStaffId");
+                    b.Property<Guid>("AcceptStaffId");
 
                     b.Property<int>("AcceptWay");
 
@@ -82,7 +82,7 @@ namespace BPMS02.Migrations
 
                     b.Property<int>("PromisedDeadline");
 
-                    b.Property<Guid?>("ResponseStaffId");
+                    b.Property<Guid>("ResponseStaffId");
 
                     b.Property<int>("SignStatus");
 
@@ -183,7 +183,7 @@ namespace BPMS02.Migrations
                         .IsRequired()
                         .HasMaxLength(50);
 
-                    b.Property<DateTime?>("ProjectProgressExplanation");
+                    b.Property<string>("ProjectProgressExplanation");
 
                     b.Property<string>("ReportNo")
                         .HasMaxLength(20);
@@ -297,11 +297,13 @@ namespace BPMS02.Migrations
                 {
                     b.HasOne("BPMS02.Models.Staff", "AcceptStaff")
                         .WithMany("AcceptContracts")
-                        .HasForeignKey("AcceptStaffId");
+                        .HasForeignKey("AcceptStaffId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("BPMS02.Models.Staff", "ResponseStaff")
                         .WithMany("ResponseContracts")
-                        .HasForeignKey("ResponseStaffId");
+                        .HasForeignKey("ResponseStaffId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("BPMS02.Models.InspectionType", b =>

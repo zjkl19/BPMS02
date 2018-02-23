@@ -1,0 +1,30 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model BPMS02.Areas.Dev.Models.ProjectQuery
+
+@using BPMS02.Areas.Dev.Models
+
+
+<form asp-area="Dev" asp-controller="Project" asp-action="Query"
+      data-ajax="true"
+      data-ajax-mode="replace"
+      data-ajax-loading="#loading"
+      data-ajax-loading-duration=1000
+      data-ajax-update="#ajaxProjectBody"
+      method="post">
+    <div class="row">
+        <label asp-for="Name"> </label><input asp-for="Name" />
+    </div>
+    <div class="row">
+        <label asp-for="EnterDateAfter"></label>晚于<input asp-for="EnterDateAfter" />早于<input asp-for="EnterDateBefore" />
+    </div>
+    <div class="row">
+        <label asp-for="SiteFinishedDateAfter"></label>晚于<input asp-for="SiteFinishedDateAfter" />早于<input asp-for="SiteFinishedDateBefore" />
+    </div>
+    <div class="row">
+        <label asp-for="ReportProgressQuery"></label>
+        <select asp-for="ReportProgressQuery" asp-items="Html.GetEnumSelectList<ReportProgressQuery>()" class="form-control"></select>
+    </div>
+    <button type="submit">查询项目</button>
+</form>

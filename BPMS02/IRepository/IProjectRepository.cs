@@ -8,7 +8,7 @@ namespace BPMS02.IRepository
 {
     public interface IProjectRepository
     {
-        Task<List<Project>> Projects { get; }
+        IEnumerable<Project> Projects { get; }
 
         Task CreateAsync(Project project);
 

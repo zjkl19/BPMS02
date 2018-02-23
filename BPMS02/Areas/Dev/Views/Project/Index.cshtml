@@ -1,0 +1,36 @@
+﻿@using BPMS02.Areas.Dev.Models
+@{
+    ViewData["Title"] = "Index";
+}
+<div>
+    <h3>项目管理</h3>
+</div>
+
+<div class="clearfix" style="margin-bottom: 10px;"></div>
+
+<div class="row">
+    <a asp-action="Create" target="_blank">添加新项目</a>
+</div>
+<div class="clearfix" style="margin-bottom: 10px;"></div>
+
+<div class="row col-lg-4">
+    @Html.Partial("ProjectQueryPartial", new ProjectQuery())
+</div>
+<div class="clearfix" style="margin-bottom: 10px;"></div>
+
+<div class="row">
+    <form asp-area="Dev" asp-controller="Project" asp-action="List"
+          data-ajax="true"
+          data-ajax-mode="replace"
+          data-ajax-loading="#loading"
+          data-ajax-loading-duration=1000
+          data-ajax-update="#ajaxProjectBody"
+          method="get">
+        <button type="submit">查看所有项目</button>
+    </form>
+</div>
+
+<div id="ajaxProjectBody" class="row">
+
+</div>
+

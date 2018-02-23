@@ -63,57 +63,57 @@
 
         @foreach (var item in Model.ContractViewModels)
         {
-        <tr>
-            <td>
-                @i
-                @{
-            i++;
-                }
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.No)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Amount)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SignedDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Deadline)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PromisedDeadline)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.JobContent)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ProjectLocation)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Client)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ClientContactPerson)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ClientContactPersonPhone)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AcceptWay)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SignStatus)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary" target="_blank">Edit</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Delete</a>
-            </td>
-        </tr>
+            <tr>
+                <td>
+                    @i
+                    @{
+                        i++;
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.No)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Amount)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SignedDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Deadline)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PromisedDeadline)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.JobContent)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProjectLocation)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Client)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ClientContactPerson)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ClientContactPersonPhone)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AcceptWay)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SignStatus)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary" target="_blank">Edit</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Delete</a>
+                </td>
+            </tr>
 
         }
     </tbody>
@@ -126,11 +126,7 @@
           data-ajax-loading-duration=1000
           data-ajax-update="#ajaxContractBody"
           method="post">
-        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-        <!-- Input and Submit elements -->
-        每页显示<input asp-for="PagingInfo.ItemsPerPage" style="width:50px"> 条,当前第@{@Html.DisplayFor(p => p.PagingInfo.CurrentPage)}页,共@{@Html.DisplayFor(p => p.PagingInfo.TotalItems)}条记录,共@{@Html.DisplayFor(p => p.PagingInfo.TotalPages)}页, 第<input asp-for="PagingInfo.CurrentPage" style="width:50px"> 页,<button type="submit">Go</button>
-        <span asp-validation-for="PagingInfo.ItemsPerPage" class="text-danger"></span>
-        <span asp-validation-for="PagingInfo.CurrentPage" class="text-danger"></span>
+        @Html.Partial("PagingTagPartial", Model.PagingInfo)
     </form>
 
 </div>

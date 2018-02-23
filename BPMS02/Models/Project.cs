@@ -27,10 +27,6 @@ namespace BPMS02.Models
         /// </summary>
         public DateTime CreateTime { get; set; }
 
-        /// <summary>
-        /// 检测类型
-        /// </summary>
-        public int InspectionType { get; set; }
 
         /// <summary>
         /// 标准产值
@@ -98,13 +94,17 @@ namespace BPMS02.Models
         /// <summary>
         /// 项目进展情况说明
         /// </summary>
-        public DateTime? ProjectProgressExplanation { get; set; }
+        public string ProjectProgressExplanation { get; set; }
 
+        [ForeignKey("Contract")]
+        public Guid ContractId { get; set; }
         /// <summary>
         /// 1个项目只能关联1份合同
         /// </summary>
         public virtual Contract Contract { get; set; }
 
+        [ForeignKey("Bridge")]
+        public Guid BridgeId { get; set; }
         /// <summary>
         /// 1个项目只能检测1座桥梁
         /// </summary>
