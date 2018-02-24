@@ -1,0 +1,120 @@
+﻿@model BPMS02.Areas.Dev.Models.ProjectViewModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>ProjectViewModel</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.CreateTime)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.CreateTime)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.StandardValue)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.StandardValue)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.CalcValue)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.CalcValue)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.EnterProgress)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.EnterProgress)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.EnterDate)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.EnterDate)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.SiteProgress)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.SiteProgress)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.SiteFinishedDate)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.SiteFinishedDate)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ExitDate)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ExitDate)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ReportProgress)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ReportProgress)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ReportNo)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ReportNo)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ReportPublishedDate)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ReportPublishedDate)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.DelayDays)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.DelayDays)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.DelayRate)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.DelayRate)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ProjectProgressExplanation)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ProjectProgressExplanation)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ContractId)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ContractId)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.BridgeId)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.BridgeId)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

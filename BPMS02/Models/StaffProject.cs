@@ -35,8 +35,12 @@ namespace BPMS02.Models
         [Column(TypeName = "money")]
         public decimal? CalcValue { get; set; }
 
+        [ForeignKey("Staff")]
+        public Guid StaffId { get; set; }
         public virtual Staff Staff { get; set; }
 
+        [ForeignKey("Project")]
+        public Guid ProjectId { get; set; }
         public virtual Project Project { get; set; }
 
 

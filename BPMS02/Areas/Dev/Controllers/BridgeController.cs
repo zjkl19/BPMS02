@@ -27,10 +27,7 @@ namespace BPMS02.Areas.Dev.Controllers
         }
 
         // GET: Bridge
-        public IActionResult Index()
-        {
-            return View();
-        }
+        public IActionResult Index() => View();
 
         public async Task<PartialViewResult> List()
         {
@@ -149,10 +146,7 @@ namespace BPMS02.Areas.Dev.Controllers
         }
 
         // GET: Bridge/Create
-        public IActionResult Create()
-        {
-            return View();
-        }
+        public IActionResult Create() => View();
 
         // POST: Bridge/Create
         [HttpPost]

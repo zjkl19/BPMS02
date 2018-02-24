@@ -7,16 +7,20 @@ using BPMS02.Models;
 
 namespace BPMS02.Data
 {
-    public static class DbInitializer
+    public class DbInitializer
     {
+        private DataContext _context;
+
+        public DbInitializer(DataContext context) => _context = context;
+
         //https://docs.microsoft.com/en-us/aspnet/core/data/ef-mvc/intro
-        public static void Initialize(DataContext context)
+        public void Initialize()
         {
 
-            context.Database.EnsureCreated();
+            _context.Database.EnsureCreated();
 
             // Look for any students.
-            if (context.Staffs.Any())
+            if (_context.Staffs.Any())
             {
                 return;   // DB has been seeded
             }
@@ -136,22 +140,25 @@ namespace BPMS02.Data
             };
             foreach (Staff s in staffs)
             {
-                context.Staffs.Add(s);
+                _context.Staffs.Add(s);
             }
-            context.SaveChanges();
+            _context.SaveChanges();
 
-            InitContract(context, staffs);
+            Contract[] contracts =InitContract(staffs);
+            Bridge[] bridges=InitBridge();
+            Project[] projects = InitProject(contracts, bridges);
+            StaffProject[] staffProjects = InitStaffProject(staffs,projects);
 
         }
 
-        public static void InitContract(DataContext context,Staff[] staffs)
+        public Contract[] InitContract(Staff[] staffs)
         {
-            context.Database.EnsureCreated();
+            _context.Database.EnsureCreated();
 
             // Look for any students.
-            if (context.Contracts.Any())
+            if (_context.Contracts.Any())
             {
-                return;   // DB has been seeded
+                return null;   // DB has been seeded
             }
 
             var contracts = new Contract[]
@@ -171,8 +178,8 @@ namespace BPMS02.Data
                     ClientContactPersonPhone="15804001234",
                     AcceptWay=(int)(AcceptWay.bid),
                     SignStatus=(int)(SignStatus.clientSigned),
-                    AcceptStaff=staffs[0],
-                    ResponseStaff=staffs[1]
+                    AcceptStaffId=staffs[0].Id,
+                    ResponseStaffId=staffs[1].Id
                 },
                 new Contract{
                     Id=Guid.NewGuid(),
@@ -189,8 +196,8 @@ namespace BPMS02.Data
                     ClientContactPersonPhone="13904001111",
                     AcceptWay=(int)(AcceptWay.delegation),
                     SignStatus=(int)(SignStatus.clientSigned),
-                    AcceptStaff=staffs[2],
-                    ResponseStaff=staffs[3]
+                    AcceptStaffId=staffs[2].Id,
+                    ResponseStaffId=staffs[3].Id
                 },
                 new Contract{
                     Id=Guid.NewGuid(),
@@ -207,16 +214,212 @@ namespace BPMS02.Data
                     ClientContactPersonPhone="13812344321",
                     AcceptWay=(int)(AcceptWay.discussion),
                     SignStatus=(int)(SignStatus.corpSigned),
-                    AcceptStaff=staffs[3],
-                    ResponseStaff=staffs[4]
+                    AcceptStaffId=staffs[3].Id,
+                    ResponseStaffId=staffs[4].Id
                 }
             };
             foreach (Contract c in contracts)
             {
-                context.Contracts.Add(c);
+                _context.Contracts.Add(c);
             }
-            context.SaveChanges();
+            _context.SaveChanges();
 
+            return contracts;
+
+        }
+        public Bridge[] InitBridge()
+        {
+            _context.Database.EnsureCreated();
+
+            // Look for any students.
+            if (_context.Bridges.Any())
+            {
+                return null;   // DB has been seeded
+            }
+            var bridges = new Bridge[]
+            {
+                new Bridge{
+                    Id=Guid.NewGuid(),
+                    Name="莆田市过溪桥",
+                    Length=125.0,
+                    Width=8.5,
+                    SpanNumber=1,
+                    StructureType=(int)(StructureType.Suspension_CableStayed)
+                },
+                new Bridge{
+                    Id=Guid.NewGuid(),
+                    Name="莆田市城港大桥",
+                    Length=100.0,
+                    Width=10.0,
+                    SpanNumber=1,
+                    StructureType=(int)(StructureType.Arch)
+                },
+                new Bridge{
+                    Id=Guid.NewGuid(),
+                    Name="福州市x桥",
+                    Length=30.0,
+                    Width=14.0,
+                    SpanNumber=1,
+                    StructureType=(int)(StructureType.SimpleSupportedBeam)
+                },
+            };
+            foreach (Bridge v in bridges)
+            {
+                _context.Bridges.Add(v);
+            }
+            _context.SaveChanges();
+
+            return bridges;
+
+        }
+        public Project[] InitProject(Contract[] contracts,Bridge[] bridges)
+        {
+            _context.Database.EnsureCreated();
+
+            // Look for any students.
+            if (_context.Projects.Any())
+            {
+                return null;   // DB has been seeded
+            }
+            var projects = new Project[]
+            {
+                new Project{
+                    Id=Guid.NewGuid(),
+                    Name="莆田市过溪桥外观检测",
+                    CreateTime=DateTime.Now,
+                    BridgeId=bridges[0].Id,
+                    ContractId=contracts[0].Id,
+                    StandardValue=100000,
+                    CalcValue =2000,
+                    EnterProgress=(int)(EnterProgress.entered),
+                    EnterDate=DateTime.Parse("2018-03-25"),
+                    SiteProgress=(int)SiteProgress.Finished,
+                    SiteFinishedDate=DateTime.Parse("2018-04-09"),
+                    ExitDate=DateTime.Parse("2018-04-10"),
+                    ReportProgress=(int)ReportProgress.notFinished,
+                    ReportPublishedDate=null,
+                    ReportNo="",
+                    ProjectProgressExplanation="报告进度完成60%",
+                    DelayDays=0,
+                    DelayRate=0,
+                },
+                 new Project{
+                    Id=Guid.NewGuid(),
+                    Name="莆田市城港大桥检测",
+                    CreateTime=DateTime.Now,
+                    BridgeId=bridges[1].Id,
+                    ContractId=contracts[0].Id,
+                    StandardValue=200000,
+                    CalcValue =4000,
+                    EnterProgress=(int)(EnterProgress.entered),
+                    EnterDate=DateTime.Parse("2018-02-28"),
+                    SiteProgress=(int)SiteProgress.Finished,
+                    SiteFinishedDate=DateTime.Parse("2018-03-05"),
+                    ExitDate=DateTime.Parse("2018-03-06"),
+                    ReportProgress=(int)ReportProgress.finished,
+                    ReportPublishedDate=DateTime.Parse("2018-03-15"),
+                    ReportNo="BG2018000001",
+                    ProjectProgressExplanation="项目已完成",
+                    DelayDays=0,
+                    DelayRate=0,
+                },
+                new Project{
+                    Id=Guid.NewGuid(),
+                    Name="福州市x桥荷载试验",
+                    CreateTime=DateTime.Now,
+                    BridgeId=bridges[2].Id,
+                    ContractId=contracts[1].Id,
+                    StandardValue=150000,
+                    CalcValue =3000,
+                    EnterProgress=(int)(EnterProgress.notEntered),
+                    EnterDate=null,
+                    SiteProgress=(int)SiteProgress.notFinished,
+                    SiteFinishedDate=null,
+                    ExitDate=null,
+                    ReportProgress=(int)ReportProgress.notFinished,
+                    ReportPublishedDate=null,
+                    ReportNo="",
+                    ProjectProgressExplanation="项目正在进行进场前的准备",
+                    DelayDays=0,
+                    DelayRate=0,
+                },
+
+            };
+            foreach (Project v in projects)
+            {
+                _context.Projects.Add(v);
+            }
+            _context.SaveChanges();
+            return projects;
+        }
+        public StaffProject[] InitStaffProject(Staff[] staffs, Project[] projects)
+        {
+            _context.Database.EnsureCreated();
+
+            // Look for any students.
+            if (_context.StaffProjects.Any())
+            {
+                return null;   
+            }
+            var staffProjects = new StaffProject[]
+            {
+                new StaffProject{
+                    Id=Guid.NewGuid(),
+                    StaffId=staffs[0].Id,
+                    ProjectId =projects[0].Id,
+                    Labor =(int)Labor.response,
+                    Ratio=Convert.ToDecimal(0.2),
+                    StandardValue =0,
+                    CalcValue=0,
+
+                },
+                new StaffProject{
+                    Id=Guid.NewGuid(),
+                    StaffId=staffs[0].Id,
+                    ProjectId =projects[0].Id,
+                    Labor =(int)Labor.siteWorking,
+                    Ratio=0,
+                    StandardValue =0,
+                    CalcValue=0,
+
+                },
+                new StaffProject{
+                    Id=Guid.NewGuid(),
+                    StaffId=staffs[1].Id,
+                    ProjectId =projects[0].Id,
+                    Labor =(int)Labor.siteWorking,
+                    Ratio=0,
+                    StandardValue =0,
+                    CalcValue=0,
+
+                },
+                 new StaffProject{
+                    Id=Guid.NewGuid(),
+                    StaffId=staffs[2].Id,
+                    ProjectId =projects[0].Id,
+                    Labor =(int)Labor.reportWriting,
+                    Ratio=0,
+                    StandardValue =0,
+                    CalcValue=0,
+
+                 },
+                new StaffProject{
+                    Id=Guid.NewGuid(),
+                    StaffId=staffs[3].Id,
+                    ProjectId =projects[1].Id,
+                    Labor =(int)Labor.response,
+                    Ratio=0,
+                    StandardValue =0,
+                    CalcValue=0,
+
+                 },
+            };
+            foreach (StaffProject v in staffProjects)
+            {
+                _context.StaffProjects.Add(v);
+            }
+            _context.SaveChanges();
+            return staffProjects;
         }
     }
 }

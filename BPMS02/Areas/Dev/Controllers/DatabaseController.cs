@@ -14,14 +14,12 @@ namespace BPMS02.Areas.Dev.Controllers
     {
         private readonly DataContext _context;
 
-        public DatabaseController(DataContext context)
-        {
-            _context = context;
-        }
+        public DatabaseController(DataContext context) => _context = context;
 
         public IActionResult Initialize()
         {
-            DbInitializer.Initialize(_context);
+            var dbInit = new DbInitializer(_context);
+            dbInit.Initialize();
             TempData["message"] = "Initialize Successful!";
             return RedirectToAction("Index","Dev", new { area = "" });
         }

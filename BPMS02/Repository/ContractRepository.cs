@@ -16,14 +16,8 @@ namespace BPMS02.Repository
         {
             context = _context;
         }
-        public Task<List<Contract>> Contracts
-        {
-            get
-            {
-                return context.Contracts.ToListAsync();
-            }
-        }
 
+        public Task<List<Contract>> Contracts => context.Contracts.ToListAsync();
 
         public Task CreateAsync(Contract contract)
         {

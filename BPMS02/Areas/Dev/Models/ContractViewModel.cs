@@ -76,7 +76,7 @@ namespace BPMS02.Areas.Dev.Models
         public Guid AcceptStaffId { get; set; }
 
         [Required]
-        [Display(Name = "合同承接人")]
+        [Display(Name = "合同负责人")]
         public Guid ResponseStaffId { get; set; }
 
     }

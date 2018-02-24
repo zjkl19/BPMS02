@@ -1,8 +1,10 @@
 ﻿@*
     For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 *@
-@model BPMS02.Areas.Dev.Models.ContractQuery
-
+@model ContractQuery
+    <div id="globalLoading" class="load" style="display:none">
+        <p>查询中...</p>
+    </div>
 <div class="col-sm-12 col-lg-4">
     <form asp-area="Dev" asp-controller="Contract" asp-action="QueryByNo"
           data-ajax="true"

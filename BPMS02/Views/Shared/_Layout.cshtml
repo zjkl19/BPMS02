@@ -45,6 +45,8 @@
                     <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
                     <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
                     <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
+                    <li><a asp-area="" asp-controller="Contract" asp-action="Index">合同管理</a></li>
+                    <li><a asp-area="" asp-controller="Project" asp-action="Index">项目管理</a></li>
                     <li><a asp-area="" asp-controller="Dev" asp-action="Index">系统测试</a></li>
                 </ul>
             </div>
@@ -52,13 +54,13 @@
     </nav>
 
     <div>
-        @if (TempData["message"] != null)
+        @if (TempData["globalMessage"] != null)
         {
-            <div class="alert-success">@TempData["message"]</div>
+            <div class="alert-success">@TempData["globalMessage"]</div>
 
         }
     </div>
-    <div id="loading" class="load" style="display:none">
+    <div id="globalLoading" class="load" style="display:none">
         <p>查询中...</p>
     </div>
 

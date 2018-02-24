@@ -1,0 +1,104 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model ContractBodyViewModel
+<script>
+    $(document).ready(function () {
+        $('#chooseContractButton').on('click', function () {
+
+
+            ContractId = $(":input:radio:checked").map(function () {
+                return $(this).parent().siblings('td').eq(0).text();  // 根据checkbox定位到后面的td，然后使用text()函数获取内容
+            }).get();   // 获取内容数组并拼接为字符串
+
+            ContractNo = $(":input:radio:checked").map(function () {
+                return $(this).parent().siblings('td').eq(2).text();
+            }).get();
+
+            ContractName = $(":input:radio:checked").map(function () {
+                return $(this).parent().siblings('td').eq(3).text();
+            }).get();
+
+            ResponseStaffName = $(":input:radio:checked").map(function () {
+                return $(this).parent().siblings('td').eq(4).text();
+            }).get();
+
+
+            console.log(ContractId)
+            console.log(ContractNo)
+            console.log(ContractName)
+            console.log(ResponseStaffName)
+            $('label[for="ContractNo"]').after(ContractNo)
+            $("#content").after("<p>姚明退役了...</p>"); 
+            //$("#ContractId").attr("value", $.trim(ContractId));
+            //$("#ContractNo").attr("value", ContractNo);
+            //$("#ContractName").attr("value", ContractName);
+            //$("#ResponseStaffName").attr("value", ResponseStaffName);
+
+        });
+    });
+</script>
+
+
+<div class="row">
+    <input id="selectContractButton" type="button" data-toggle="modal" data-target="#selectContract_id" value="选择合同" />
+</div>
+<div class="row">
+    <div class="col-lg-2">
+        <label asp-for="ContractNo"></label>
+    </div>
+
+    <div class="col-lg-2">
+        <label asp-for="ContractName"></label>
+    </div>
+
+    <div class="col-lg-2">
+        <label asp-for="ResponseStaffName"></label>
+    </div>
+</div>
+<div class="row">
+    <form asp-area="" asp-controller="Contract" asp-action="List"
+          data-ajax="true"
+          data-ajax-mode="replace"
+          data-ajax-loading="#globalLoading"
+          data-ajax-loading-duration=1000
+          data-ajax-update="#ajaxProjectBody"
+          method="post">
+        <input asp-for="ContractId" type="hidden" />
+        <button type="submit">查看合同项目</button>
+
+    </form>
+</div>
+
+<div class="modal fade" id="selectContract_id" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                <h4 class="modal-title" id="myModalLabel">请选择合同</h4>
+
+            </div>
+
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        @Html.Partial("ContractSelectQueryPartial", new ContractSelectQuery())
+                    </div>
+                    <div id="ajaxSelectContractBody" class="row">
+
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div style="display: inline-block">
+                    <button id="chooseContractButton" class="btn btn-primary" data-dismiss="modal" data-whatever="">选择</button>
+                </div>
+                <div style="display: inline-block">
+                    <button class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</div>

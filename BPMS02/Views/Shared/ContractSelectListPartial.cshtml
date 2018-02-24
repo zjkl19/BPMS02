@@ -1,0 +1,80 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model ItemListViewModel<ContractSelectViewModel>
+
+@{
+    int i = 1;
+
+    var headerMetadata = Model.ItemViewModels.FirstOrDefault();
+
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                <!-- RadioBox -->
+            </th>
+            
+            <th>
+                序号
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => headerMetadata.No)
+            </th>
+
+            <th>
+                @Html.DisplayNameFor(model => headerMetadata.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => headerMetadata.ResponseStaffName)
+            </th>
+
+
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach (var item in Model.ItemViewModels)
+        {
+            <tr>
+                <td>
+                    @Html.RadioButtonFor(modelItem => item.Id, false)
+                </td>
+                <td style="display: none">
+                    @Html.DisplayFor(modelItem => item.Id)
+                </td>
+                <td>
+                    @i
+                    @{
+                        i++;
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.No)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ResponseStaffName)
+                </td>
+
+            </tr>
+
+        }
+    </tbody>
+</table>
+
+<form asp-area="" asp-controller="Contract" asp-action="List"
+      data-ajax="true"
+      data-ajax-mode="replace"
+      data-ajax-loading="#localLoading"
+      data-ajax-loading-duration=1000
+      data-ajax-update="#ajaxContractBody"
+      method="post">
+    @Html.Partial("PagingTagPartial", Model.PagingInfo)
+</form>
+
+
