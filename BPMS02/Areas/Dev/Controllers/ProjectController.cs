@@ -212,8 +212,9 @@ namespace BPMS02.Areas.Dev.Controllers
                 ReportProgressUpperBound = (int)projectQuery.ReportProgressQuery;
                 ReportProgressLowerBound = (int)projectQuery.ReportProgressQuery;
             }
+            //var linq1 =await _mainRepository.Projects;
 
-            var linqVar = _mainRepository.Projects.Where(p => p.Name.Contains(nameQuery))
+            var linqVar = _mainRepository.Projects.Result.Where(p => p.Name.Contains(nameQuery))
                 .Where(p => (p.EnterDate > projectQuery.EnterDateAfter && p.EnterDate < projectQuery.EnterDateBefore))
                 .Where(p => (p.SiteFinishedDate > projectQuery.SiteFinishedDateAfter && p.SiteFinishedDate < projectQuery.SiteFinishedDateBefore))
                 .Where(p => (p.ReportProgress >= ReportProgressLowerBound && p.ReportProgress <= ReportProgressUpperBound));

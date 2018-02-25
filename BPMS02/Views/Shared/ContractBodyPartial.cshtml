@@ -28,8 +28,11 @@
             console.log(ContractNo)
             console.log(ContractName)
             console.log(ResponseStaffName)
+            //jquery after用法举例：$("#content").after("<p>姚明退役了...</p>"); 
             $('label[for="ContractNo"]').after(ContractNo)
-            $("#content").after("<p>姚明退役了...</p>"); 
+            $('label[for="ContractName"]').after(ContractName)
+            $('label[for="ResponseStaffName"]').after(ResponseStaffName)
+            $("#ContractId").attr("value", $.trim(ContractId));
             //$("#ContractId").attr("value", $.trim(ContractId));
             //$("#ContractNo").attr("value", ContractNo);
             //$("#ContractName").attr("value", ContractName);
@@ -57,12 +60,12 @@
     </div>
 </div>
 <div class="row">
-    <form asp-area="" asp-controller="Contract" asp-action="List"
+    <form asp-area="" asp-controller="Project" asp-action="BriefList"
           data-ajax="true"
           data-ajax-mode="replace"
           data-ajax-loading="#globalLoading"
           data-ajax-loading-duration=1000
-          data-ajax-update="#ajaxProjectBody"
+          data-ajax-update="#ajaxProjectBriefBody"
           method="post">
         <input asp-for="ContractId" type="hidden" />
         <button type="submit">查看合同项目</button>

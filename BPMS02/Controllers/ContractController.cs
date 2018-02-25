@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-using Microsoft.AspNetCore.Mvc;
 using BPMS02.Data;
 using Microsoft.Extensions.Options;
 using BPMS02.IRepository;

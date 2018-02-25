@@ -2,81 +2,80 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using BPMS02.Data;
-using BPMS02.IRepository;
-using BPMS02.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+
+using BPMS02.Data;
 using Microsoft.Extensions.Options;
+using BPMS02.IRepository;
+using BPMS02.ViewModels;
 
 namespace BPMS02.Controllers
 {
-    public class ProjectController : Controller
+    public class StaffProjectController : Controller
     {
-        private IProjectRepository _mainRepository;
-        private IBridgeRepository _bridgeRepository;
+        private IStaffProjectRepository _mainRepository;
+        private IStaffRepository _staffRepository;
+        private IProjectRepository _projectRepository;
         private readonly IOptions<PageSettings> _pageSettings;
 
-        public ProjectController(IProjectRepository mainRepository, IBridgeRepository bridgeRepository,IOptions<PageSettings> pageSettings)
+        public StaffProjectController(IStaffProjectRepository mainRepository, IStaffRepository staffRepository, IProjectRepository projectRepository, IOptions<PageSettings> pageSettings)
         {
             _mainRepository = mainRepository;
-            _bridgeRepository = bridgeRepository;
+            _staffRepository = staffRepository;
+            _projectRepository = projectRepository;
             _pageSettings = pageSettings;
         }
-        // GET: Project
+
+        // GET: StaffProject
         public ActionResult Index()
         {
             return View();
         }
 
-        [HttpPost]
-        public async Task<PartialViewResult> BriefList(Guid ContractId)
+
+        public async Task<PartialViewResult> ListByProjectId(Guid Id)
         {
 
-            var re01 = await _mainRepository.Projects;
-            var re02 = await _bridgeRepository.Bridges;
+
+            var re01 = await _mainRepository.StaffProjects;
+            var re02 = await _staffRepository.Staffs;
             var linqVar = from p in re01
-                           join q in re02
-                           on p.BridgeId equals q.Id
-                           where p.ContractId==ContractId
-                           select new ProjectBriefViewModel
-                           {
-                               Id = p.Id,
-                               Name=p.Name,
-                               BridgeName=q.Name
-                           };
+                          join q in re02
+                          on p.StaffId equals q.Id
+                          where p.ProjectId==Id
+                          select new ProjectStaffProjectViewModel
+                          {
+                              Id = p.Id,
+                              StaffName = q.Name,
+                              Labor = (Labor)p.Labor,
+                              Ratio = p.Ratio,
+                              StandardValue = p.StandardValue,
+                              CalcValue = p.CalcValue,
+                          };
 
-            var model = new ProjectBriefListViewModel
+            var model = new ProjectStaffProjectListViewModel
             {
-                ProjectBriefViewModels = linqVar,
-                ProjectBriefInfo = new ProjectBriefInfo
-                {
-                    TotalItems = linqVar.Count(),
-                    //TotalStdValue
-                    //TotalCalcValue
-
-                }
+                ProjectStaffProjectViewModels = linqVar,
 
             };
 
-            return PartialView("ProjectBriefListPartial", model);
+            return PartialView("ProjectStaffProjectListPartial", model);
         }
 
-   
-
-        // GET: Project/Details/5
+        // GET: StaffProject/Details/5
         public ActionResult Details(int id)
         {
             return View();
         }
 
-        // GET: Project/Create
+        // GET: StaffProject/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: Project/Create
+        // POST: StaffProject/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(IFormCollection collection)
@@ -93,13 +92,13 @@ namespace BPMS02.Controllers
             }
         }
 
-        // GET: Project/Edit/5
+        // GET: StaffProject/Edit/5
         public ActionResult Edit(int id)
         {
             return View();
         }
 
-        // POST: Project/Edit/5
+        // POST: StaffProject/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, IFormCollection collection)
@@ -116,13 +115,13 @@ namespace BPMS02.Controllers
             }
         }
 
-        // GET: Project/Delete/5
+        // GET: StaffProject/Delete/5
         public ActionResult Delete(int id)
         {
             return View();
         }
 
-        // POST: Project/Delete/5
+        // POST: StaffProject/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, IFormCollection collection)

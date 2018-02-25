@@ -18,13 +18,7 @@ namespace BPMS02.Repository
             context = _context;
         }
 
-        public Task<List<Bridge>> Bridges
-        {
-            get
-            {
-                return context.Bridges.ToListAsync();
-            }
-        }
+        public Task<List<Bridge>> Bridges => context.Bridges.ToListAsync();
 
 
         public Task CreateAsync(Bridge bridge)

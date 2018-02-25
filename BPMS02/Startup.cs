@@ -39,6 +39,7 @@ namespace BPMS02
             services.AddScoped<IContractRepository, ContractRepository>();
             services.AddScoped<IBridgeRepository, BridgeRepository>();
             services.AddScoped<IProjectRepository, ProjectRepository>();
+            services.AddScoped<IStaffProjectRepository, StaffProjectRepository>();
 
             services.AddMvc();
         }

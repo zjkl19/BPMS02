@@ -1,0 +1,72 @@
+﻿
+@model ProjectBriefListViewModel
+
+@{
+    int i = 1;
+
+    var headerMetadata = Model.ProjectBriefViewModels.FirstOrDefault();
+
+}
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+
+            <th>
+                序号
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => headerMetadata.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => headerMetadata.BridgeName)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.ProjectBriefViewModels)
+        {
+            <tr>
+                <td>
+                    @i
+                    @{
+                        i++;
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.BridgeName)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a> |
+                    <a asp-controller="StaffProject" asp-action="ListByProjectId" asp-route-id="@item.Id" data-ajax="true"
+                       data-ajax-mode="replace"
+                       data-ajax-loading="#globalLoading"
+                       data-ajax-loading-duration=1000
+                       data-ajax-update="#ajaxProjectStaffProjectBody"
+                       method="get">参与人员</a>
+
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<div class="row">
+    <a asp-action="Create" target="_blank">添加新项目</a>
+
+</div>
+
+<div class="row">
+    合计:
+    <br />
+    项目数量：@Model.ProjectBriefInfo.TotalItems
+    <br />
+    标准产值：@Model.ProjectBriefInfo.TotalStdValue
+    <br />
+    计算产值：@Model.ProjectBriefInfo.TotalCalcValue
+</div>

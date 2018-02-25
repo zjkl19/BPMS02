@@ -17,8 +17,7 @@ namespace BPMS02.Repository
         {
             context = _context;
         }
-
-        public IEnumerable<Project> Projects => context.Projects;
+        public Task<List<Project>> Projects => context.Projects.ToListAsync();
 
 
         public Task CreateAsync(Project project)
