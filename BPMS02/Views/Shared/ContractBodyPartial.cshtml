@@ -29,14 +29,19 @@
             console.log(ContractName)
             console.log(ResponseStaffName)
             //jquery after用法举例：$("#content").after("<p>姚明退役了...</p>"); 
-            $('label[for="ContractNo"]').after(ContractNo)
-            $('label[for="ContractName"]').after(ContractName)
-            $('label[for="ResponseStaffName"]').after(ResponseStaffName)
+            //$('label[for="ContractNo"]').after(ContractNo)
+            //$('label[for="ContractName"]').after(ContractName)
+            //$('label[for="ResponseStaffName"]').after(ResponseStaffName)
+
             $("#ContractId").attr("value", $.trim(ContractId));
+
             //$("#ContractId").attr("value", $.trim(ContractId));
             //$("#ContractNo").attr("value", ContractNo);
             //$("#ContractName").attr("value", ContractName);
             //$("#ResponseStaffName").attr("value", ResponseStaffName);
+            $("#ContractNo").text(ContractNo);
+            $("#ContractName").text(ContractName);
+            $("#ResponseStaffName").text(ResponseStaffName);
 
         });
     });
@@ -48,15 +53,15 @@
 </div>
 <div class="row">
     <div class="col-lg-2">
-        <label asp-for="ContractNo"></label>
+        <label asp-for="ContractNo"></label><div id="ContractNo"></div>
     </div>
 
     <div class="col-lg-2">
-        <label asp-for="ContractName"></label>
+        <label asp-for="ContractName"></label><div id="ContractName"></div>
     </div>
 
     <div class="col-lg-2">
-        <label asp-for="ResponseStaffName"></label>
+        <label asp-for="ResponseStaffName"></label><div id="ResponseStaffName"></div>
     </div>
 </div>
 <div class="row">
