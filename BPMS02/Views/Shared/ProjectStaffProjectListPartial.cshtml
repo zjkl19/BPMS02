@@ -8,6 +8,10 @@
 
 }
 
+<div>
+    项目名称：@Model.ProjectName
+    </div>
+
 <table class="table table-bordered">
     <thead>
         <tr>
@@ -68,6 +72,6 @@
     </tbody>
 </table>
 <div class="row">
-    <a asp-area="" asp-controller="StaffProject" asp-action="Create" target="_blank">添加参与人员</a>
+    <a asp-area="" asp-controller="StaffProject" asp-action="CreateByProjectId" asp-route-id="@Model.ProjectId" target="_blank">添加参与人员</a>
 
 </div>

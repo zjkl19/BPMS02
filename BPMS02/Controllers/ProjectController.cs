@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BPMS02.Data;
 using BPMS02.IRepository;
+using BPMS02.Models;
 using BPMS02.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -48,6 +49,7 @@ namespace BPMS02.Controllers
 
             var model = new ProjectBriefListViewModel
             {
+                ContractId = ContractId,
                 ProjectBriefViewModels = linqVar,
                 ProjectBriefInfo = new ProjectBriefInfo
                 {
@@ -74,6 +76,56 @@ namespace BPMS02.Controllers
         public ActionResult Create()
         {
             return View();
+        }
+
+        public IActionResult CreateByContractId(Guid Id)
+        {
+            return View(new CreateProjectViewModel
+            {
+                ContractId = Id,
+            });
+        }
+
+        // POST: Project/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateByContractId(CreateProjectViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                await _mainRepository.CreateAsync(new Project
+                {
+                    Id = Guid.NewGuid(),
+                    Name = model.Name,
+                    CreateTime = model.CreateTime,
+                    StandardValue = model.StandardValue,
+                    CalcValue = model.CalcValue,
+                    EnterProgress = (int)model.EnterProgress,
+                    EnterDate = model.EnterDate,
+                    SiteProgress = (int)model.SiteProgress,
+                    SiteFinishedDate = model.SiteFinishedDate,
+                    ExitDate = model.ExitDate,
+                    ReportProgress = (int)model.ReportProgress,
+                    DelayDays = model.DelayDays,
+                    DelayRate = model.DelayRate,
+                    ProjectProgressExplanation = model.ProjectProgressExplanation,
+                    ContractId = model.ContractId,
+                    BridgeId = model.BridgeId
+                });
+
+                TempData["message"] = "成功创建：" + model.Name + "";
+
+                return RedirectToAction(nameof(Index));
+            }
+            catch
+            {
+                return View();
+            }
         }
 
         // POST: Project/Create

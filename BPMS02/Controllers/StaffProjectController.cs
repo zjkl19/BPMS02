@@ -54,8 +54,12 @@ namespace BPMS02.Controllers
                               CalcValue = p.CalcValue,
                           };
 
+            var re = await _projectRepository.QueryByIdAsync(Id);
+
             var model = new ProjectStaffProjectListViewModel
             {
+                ProjectId = Id,
+                ProjectName = re.Name,
                 ProjectStaffProjectViewModels = linqVar,
 
             };
@@ -65,6 +69,11 @@ namespace BPMS02.Controllers
 
         // GET: StaffProject/Details/5
         public ActionResult Details(int id)
+        {
+            return View();
+        }
+
+        public IActionResult CreateByProjectId(Guid Id)
         {
             return View();
         }

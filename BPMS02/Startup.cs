@@ -33,7 +33,7 @@ namespace BPMS02
 
             services.AddOptions();
             services.Configure<PageSettings>(Configuration.GetSection("PageSettings"));
-            
+
             //Register application services.
             services.AddScoped<IStaffRepository, StaffRepository>();
             services.AddScoped<IContractRepository, ContractRepository>();
@@ -71,6 +71,7 @@ namespace BPMS02
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
+
             });
         }
     }
