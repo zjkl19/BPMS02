@@ -1,12 +1,12 @@
 ﻿@*
     For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 *@
-@model BPMS02.ViewModels.StaffSelectListViewModel
+@model ItemListViewModel<StaffSelectViewModel>
 
 @{
     int i = 1;
 
-    var headerMetadata = Model.StaffSelectViewModels.FirstOrDefault();
+    var headerMetadata = Model.ItemViewModels.FirstOrDefault();
 
 }
 
@@ -41,7 +41,7 @@
     </thead>
     <tbody>
 
-        @foreach (var item in Model.StaffSelectViewModels)
+        @foreach (var item in Model.ItemViewModels)
         {
         <tr>
             <td>

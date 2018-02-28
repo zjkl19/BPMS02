@@ -39,9 +39,9 @@ namespace BPMS02.Controllers
             int page = _pageSettings.Value.page;
             int pageSize = _pageSettings.Value.pageSize;
 
-            var re01 = await _mainRepository.Contracts;
-            var re02 = await _staffRepository.Staffs;
-            var linqVar = (from p in re01
+            var re01 = _mainRepository.EntityItems;
+            var re02 = _staffRepository.EntityItems;
+            var linqVar = await (from p in re01
                            join q in re02
                            on p.ResponseStaffId equals q.Id
                            select new ContractSelectViewModel
@@ -50,7 +50,7 @@ namespace BPMS02.Controllers
                                No = p.No,
                                Name = p.Name,
                                ResponseStaffName = q.Name
-                           }).OrderBy(p => p.Id).Skip((page - 1) * pageSize).Take(pageSize);
+                           }).OrderBy(p => p.Id).Skip((page - 1) * pageSize).Take(pageSize).ToAsyncEnumerable().ToList();
 
             var model = new ItemListViewModel<ContractSelectViewModel>
             {
@@ -85,9 +85,9 @@ namespace BPMS02.Controllers
                 pageSize = 5;
             }
 
-            var re01 = await _mainRepository.Contracts;
-            var re02 = await _staffRepository.Staffs;
-            var linqVar = (from p in re01
+            var re01 =  _mainRepository.EntityItems;
+            var re02 = _staffRepository.EntityItems;
+            var linqVar = await (from p in re01
                            join q in re02
                            on p.ResponseStaffId equals q.Id
                            select new ContractSelectViewModel
@@ -96,7 +96,7 @@ namespace BPMS02.Controllers
                                No = p.No,
                                Name = p.Name,
                                ResponseStaffName = q.Name
-                           }).OrderBy(p => p.Id).Skip((page - 1) * pageSize).Take(pageSize);
+                           }).OrderBy(p => p.Id).Skip((page - 1) * pageSize).Take(pageSize).ToAsyncEnumerable().ToList();
 
             var model = new ItemListViewModel<ContractSelectViewModel>
             {

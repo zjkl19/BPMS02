@@ -6,20 +6,9 @@ using BPMS02.Models;
 
 namespace BPMS02.IRepository
 {
-    public interface IProjectRepository
+    public interface IProjectRepository : IBasicCRUDRepository<Project>
     {
-        Task<List<Project>> Projects { get; }
+        Task<List<Project>> QueryByNameAsync(string Name);
 
-        Task CreateAsync(Project project);
-
-        Task<List<Project>> ListAsync();
-
-        Task<Project> QueryByIdAsync(Guid Id);
-
-        //Task<List<Project>> QueryByNameAsync(string Name);
-
-        Task EditAsync(Project project);
-
-        Task<Project> Delete(Guid Id);
     }
 }

@@ -38,9 +38,9 @@ namespace BPMS02.Controllers
         {
 
 
-            var re01 = await _mainRepository.StaffProjects;
-            var re02 = await _staffRepository.Staffs;
-            var linqVar = from p in re01
+            var re01 = _mainRepository.EntityItems;
+            var re02 = _staffRepository.EntityItems;
+            var linqVar = await(from p in re01
                           join q in re02
                           on p.StaffId equals q.Id
                           where p.ProjectId==Id
@@ -52,7 +52,7 @@ namespace BPMS02.Controllers
                               Ratio = p.Ratio,
                               StandardValue = p.StandardValue,
                               CalcValue = p.CalcValue,
-                          };
+                          }).ToAsyncEnumerable().ToList();
 
             var re = await _projectRepository.QueryByIdAsync(Id);
 

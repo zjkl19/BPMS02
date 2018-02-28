@@ -9,18 +9,19 @@ using BPMS02.IRepository;
 using Microsoft.EntityFrameworkCore;
 using BPMS02.Areas.Dev.Models;
 using BPMS02.Models;
+using System.Linq.Expressions;
 
 namespace BPMS02.Areas.Dev.Controllers
 {
     [Area("Dev")]
     public class ContractController : Controller
     {
-        private IContractRepository _contractRepository;
+        private IContractRepository _mainRepository;
         private IStaffRepository _staffRepository;
         private readonly IOptions<PageSettings> _pageSettings;
-        public ContractController(IContractRepository contractRepository, IStaffRepository staffRepository, IOptions<PageSettings> pageSettings)
+        public ContractController(IContractRepository mainRepository, IStaffRepository staffRepository, IOptions<PageSettings> pageSettings)
         {
-            _contractRepository = contractRepository;
+            _mainRepository = mainRepository;
             _staffRepository = staffRepository;
             _pageSettings = pageSettings;
         }
@@ -33,7 +34,7 @@ namespace BPMS02.Areas.Dev.Controllers
         public async Task<IActionResult> VerifyContractNo([Bind(include: "No")]CreateContractViewModel model)
         {
             string message = null;
-            var cnt = await _contractRepository.QueryByNoAsync(model.No);
+            var cnt = await _mainRepository.QueryByNoAsync(model.No);
             if (cnt.Count > 0)
             {
                 message = "已存在合同编号：" + model.No;
@@ -54,7 +55,7 @@ namespace BPMS02.Areas.Dev.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(CreateContractViewModel model)
         {
-            var cnt = await _contractRepository.QueryByNoAsync(model.No);
+            var cnt = await _mainRepository.QueryByNoAsync(model.No);
             if (cnt.Count > 0)
             {
                 ModelState.AddModelError("No", "已存在合同编号：" + model.No);
@@ -68,7 +69,7 @@ namespace BPMS02.Areas.Dev.Controllers
 
             try
             {
-                await _contractRepository.CreateAsync(new Contract
+                await _mainRepository.CreateAsync(new Contract
                 {
                     Id = Guid.NewGuid(),
                     No = model.No,
@@ -89,7 +90,7 @@ namespace BPMS02.Areas.Dev.Controllers
                     
                 });
 
-                TempData["message"] = "创建成功";
+                TempData["globalMessage"] = "创建成功";
             }
             catch (DbUpdateException /* ex */)
             {
@@ -106,14 +107,15 @@ namespace BPMS02.Areas.Dev.Controllers
 
         public async Task<PartialViewResult> List()
         {
-            int page = _pageSettings.Value.page;
+            int pageIndex = _pageSettings.Value.page;
             int pageSize = _pageSettings.Value.pageSize;
 
-            var cnt = await _contractRepository.ListAsync();
+            Expression<Func<Contract, Guid>> orderBy = x => x.Id;
+            var pageResult = await _mainRepository.PageListAsync<Guid>(orderBy, pageIndex, pageSize);
 
-            var model = new ContractListViewModel
+            var model = new ItemListViewModel<ContractViewModel>
             {
-                ContractViewModels = cnt.Select(p => new ContractViewModel
+                ItemViewModels = pageResult.Item1.Select(p => new  ContractViewModel
                 {
                     Id = p.Id,
                     No = p.No,
@@ -129,14 +131,14 @@ namespace BPMS02.Areas.Dev.Controllers
                     ClientContactPersonPhone = p.ClientContactPersonPhone,
                     AcceptWay =(AcceptWay)(p.AcceptWay),
                     SignStatus=(SignStatus)(p.SignStatus),
-                }).OrderBy(p => p.Id).Skip((page - 1) * pageSize).Take(pageSize),
+                }),
 
 
                 PagingInfo = new PagingInfo
                 {
-                    CurrentPage = page,
+                    CurrentPage = pageIndex,
                     ItemsPerPage = pageSize,
-                    TotalItems = cnt.Count()
+                    TotalItems = pageResult.Item2,
                 }
 
             };
@@ -147,25 +149,27 @@ namespace BPMS02.Areas.Dev.Controllers
         [HttpPost]
         public async Task<PartialViewResult> List(PagingInfo pagingInfo)
         {
-            int page;
+            int pageIndex;
             int pageSize;
 
             if (ModelState.IsValid && TryValidateModel(pagingInfo))
             {
-                page = pagingInfo.CurrentPage;
+                pageIndex = pagingInfo.CurrentPage;
                 pageSize = pagingInfo.ItemsPerPage;
             }
             else
             {
-                page = 1;
+                pageIndex = 1;
                 pageSize = 5;
             }
 
-            var cnt = await _contractRepository.ListAsync();
 
-            var model = new ContractListViewModel
+            Expression<Func<Contract, Guid>> orderBy = x => x.Id;
+            var pageResult = await _mainRepository.PageListAsync<Guid>(orderBy, pageIndex, pageSize);
+
+            var model = new ItemListViewModel<ContractViewModel>
             {
-                ContractViewModels = cnt.Select(p => new ContractViewModel
+                ItemViewModels = pageResult.Item1.Select(p => new ContractViewModel
                 {
                     Id = p.Id,
                     No = p.No,
@@ -181,13 +185,14 @@ namespace BPMS02.Areas.Dev.Controllers
                     ClientContactPersonPhone = p.ClientContactPersonPhone,
                     AcceptWay = (AcceptWay)(p.AcceptWay),
                     SignStatus = (SignStatus)(p.SignStatus),
-                }).OrderBy(p => p.Id).Skip((page - 1) * pageSize).Take(pageSize),
+                }),
+
 
                 PagingInfo = new PagingInfo
                 {
-                    CurrentPage = page,
+                    CurrentPage = pageIndex,
                     ItemsPerPage = pageSize,
-                    TotalItems = cnt.Count()
+                    TotalItems = pageResult.Item2,
                 }
 
             };
@@ -197,14 +202,13 @@ namespace BPMS02.Areas.Dev.Controllers
 
         public async Task<PartialViewResult> QueryByNo(string No)
         {
-            int page = 1;
+            int pageIndex = 1;
             int pageSize = 5;
 
-            var cnt = await _contractRepository.QueryByNoAsync(No);
-
-            var model = new ContractListViewModel
+            var cnt = await _mainRepository.QueryByNoAsync(No);
+            var model = new ItemListViewModel<ContractViewModel>
             {
-                ContractViewModels = cnt.Select(p => new ContractViewModel
+                ItemViewModels = cnt.Select(p => new ContractViewModel
                 {
                     Id = p.Id,
                     No = p.No,
@@ -220,13 +224,14 @@ namespace BPMS02.Areas.Dev.Controllers
                     ClientContactPersonPhone = p.ClientContactPersonPhone,
                     AcceptWay = (AcceptWay)(p.AcceptWay),
                     SignStatus = (SignStatus)(p.SignStatus),
-                }).OrderBy(p => p.Id).Skip((page - 1) * pageSize).Take(pageSize),
+                }).OrderBy(p => p.Id).Skip((pageIndex - 1) * pageSize).Take(pageSize),
+
 
                 PagingInfo = new PagingInfo
                 {
-                    CurrentPage = page,
+                    CurrentPage = pageIndex,
                     ItemsPerPage = pageSize,
-                    TotalItems = cnt.Count()
+                    TotalItems = cnt.Count(),
                 }
 
             };
@@ -236,14 +241,14 @@ namespace BPMS02.Areas.Dev.Controllers
 
         public async Task<PartialViewResult> QueryByName(string Name)
         {
-            int page = 1;
+            int pageIndex = 1;
             int pageSize = 5;
 
-            var cnt = await _contractRepository.QueryByNameAsync(Name);
+            var cnt = await _mainRepository.QueryByNameAsync(Name);
 
-            var model = new ContractListViewModel
+            var model = new ItemListViewModel<ContractViewModel>
             {
-                ContractViewModels = cnt.Select(p => new ContractViewModel
+                ItemViewModels = cnt.Select(p => new ContractViewModel
                 {
                     Id = p.Id,
                     No = p.No,
@@ -259,13 +264,14 @@ namespace BPMS02.Areas.Dev.Controllers
                     ClientContactPersonPhone = p.ClientContactPersonPhone,
                     AcceptWay = (AcceptWay)(p.AcceptWay),
                     SignStatus = (SignStatus)(p.SignStatus),
-                }).OrderBy(p => p.Id).Skip((page - 1) * pageSize).Take(pageSize),
+                }).OrderBy(p => p.Id).Skip((pageIndex - 1) * pageSize).Take(pageSize),
+
 
                 PagingInfo = new PagingInfo
                 {
-                    CurrentPage = page,
+                    CurrentPage = pageIndex,
                     ItemsPerPage = pageSize,
-                    TotalItems = cnt.Count()
+                    TotalItems = cnt.Count(),
                 }
 
             };
@@ -280,11 +286,11 @@ namespace BPMS02.Areas.Dev.Controllers
                 return NotFound();
             }
 
-            var re01=await _contractRepository.Contracts;
-            var re02 = await _staffRepository.Staffs;
-            var re03 = await _staffRepository.Staffs;
+            var re01= _mainRepository.EntityItems;
+            var re02 = _staffRepository.EntityItems;
+            var re03 = _staffRepository.EntityItems;
 
-            var model = from p in re01
+            var model = await (from p in re01
                        join q in re02
                        on p.AcceptStaffId equals q.Id
                        join r in re03
@@ -309,7 +315,7 @@ namespace BPMS02.Areas.Dev.Controllers
                            AcceptStaffName = q.Name,
                            ResponseStaffId = p.ResponseStaffId,
                            ResponseStaffName = r.Name
-                       };
+                       }).ToAsyncEnumerable().ToList();
             
             return View((EditContractViewModel)model.FirstOrDefault());
         }
@@ -324,7 +330,7 @@ namespace BPMS02.Areas.Dev.Controllers
 
             try
             {
-                await _contractRepository.EditAsync(new Contract
+                await _mainRepository.EditAsync(new Contract
                 {
                     Id= model.Id,
                     No = model.No,
@@ -345,7 +351,7 @@ namespace BPMS02.Areas.Dev.Controllers
 
                 });
 
-                TempData["message"] = "Edit Successful!";
+                TempData["globalMessage"] = "修改成功";
             }
             catch (DbUpdateException) //DbUpdateException /* ex */
             {
@@ -362,7 +368,7 @@ namespace BPMS02.Areas.Dev.Controllers
         {
             try
             {
-                var varDeleted = await _contractRepository.DeleteContract(Id);
+                var varDeleted = await _mainRepository.Delete(Id);
                 if (varDeleted!= null)
                 {
                     TempData["message"] = string.Format("合同编号：{0}数据已被删除", varDeleted.No);

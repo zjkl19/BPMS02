@@ -18,7 +18,7 @@ namespace BPMS02.Controllers
         private IBridgeRepository _bridgeRepository;
         private readonly IOptions<PageSettings> _pageSettings;
 
-        public ProjectController(IProjectRepository mainRepository, IBridgeRepository bridgeRepository,IOptions<PageSettings> pageSettings)
+        public ProjectController(IProjectRepository mainRepository, IBridgeRepository bridgeRepository, IOptions<PageSettings> pageSettings)
         {
             _mainRepository = mainRepository;
             _bridgeRepository = bridgeRepository;
@@ -30,22 +30,35 @@ namespace BPMS02.Controllers
             return View();
         }
 
+
         [HttpPost]
         public async Task<PartialViewResult> BriefList(Guid ContractId)
         {
 
-            var re01 = await _mainRepository.Projects;
-            var re02 = await _bridgeRepository.Bridges;
-            var linqVar = from p in re01
+            var re01 = _mainRepository.EntityItems;
+            var re02 = _bridgeRepository.EntityItems;
+
+            //var linqVar = await re01.Join(
+            //    re02,
+            //    p => p.ContractId,
+            //    q => (Guid?)(q.Id),
+            //    (p, q) => new ProjectBriefViewModel
+            //    {
+            //        Id = p.Id,
+            //        Name = p.Name,
+            //        BridgeName = q.Name
+            //    }).ToAsyncEnumerable().ToList();
+
+            var linqVar = (from p in re01
                            join q in re02
                            on p.BridgeId equals q.Id
-                           where p.ContractId==ContractId
+                           where p.ContractId == ContractId
                            select new ProjectBriefViewModel
                            {
                                Id = p.Id,
-                               Name=p.Name,
-                               BridgeName=q.Name
-                           };
+                               Name = p.Name,
+                               BridgeName = q.Name
+                           }).ToList();
 
             var model = new ProjectBriefListViewModel
             {
@@ -64,7 +77,7 @@ namespace BPMS02.Controllers
             return PartialView("ProjectBriefListPartial", model);
         }
 
-   
+
 
         // GET: Project/Details/5
         public ActionResult Details(int id)

@@ -11,6 +11,7 @@ using BPMS02.Data;
 using Microsoft.Extensions.Options;
 using BPMS02.IRepository;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace BPMS02.Areas.Dev.Controllers
 {
@@ -18,11 +19,11 @@ namespace BPMS02.Areas.Dev.Controllers
     public class StaffController : Controller
     {
 
-        private IStaffRepository _staffRepository;
+        private IStaffRepository _mainRepository;
         private readonly IOptions<PageSettings> _pageSettings;
-        public StaffController(IStaffRepository staffRepository, IOptions<PageSettings> pageSettings)
+        public StaffController(IStaffRepository mainRepository, IOptions<PageSettings> pageSettings)
         {
-            _staffRepository = staffRepository;
+            _mainRepository = mainRepository;
             _pageSettings = pageSettings;
         }
 
@@ -39,7 +40,7 @@ namespace BPMS02.Areas.Dev.Controllers
         public async Task<IActionResult> CheckNo([Bind(include:"No")]CreateStaffViewModel model)
         {
             string message = null;
-            var stf = await _staffRepository.QueryByNoAsync(model.No);
+            var stf = await _mainRepository.QueryByNoAsync(model.No);
             if (stf.Count>0)
             {
                 message = "工号" + model.No +"已被注册";
@@ -56,7 +57,7 @@ namespace BPMS02.Areas.Dev.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(CreateStaffViewModel model)
         {
-            var stf = await _staffRepository.QueryByNoAsync(model.No);
+            var stf = await _mainRepository.QueryByNoAsync(model.No);
             if (stf.Count > 0)
             {
                 ModelState.AddModelError("No", "服务端验证：该工号" + model.No + "已被注册");
@@ -70,7 +71,7 @@ namespace BPMS02.Areas.Dev.Controllers
 
             try
             {
-                await _staffRepository.CreateAsync(new Staff
+                await _mainRepository.CreateAsync(new Staff
                 {
                     Id = Guid.NewGuid(),
                     No = model.No,
@@ -84,7 +85,7 @@ namespace BPMS02.Areas.Dev.Controllers
                     HiredDate = model.HiredDate
                 });
 
-                TempData["message"] = "Create Successful!";
+                TempData["globalMessage"] = "成功创建工号"+model.No+"职工";
             }
             catch (DbUpdateException /* ex */)
             {
@@ -101,14 +102,15 @@ namespace BPMS02.Areas.Dev.Controllers
 
         public async Task<PartialViewResult> List()
         {
-            int page = _pageSettings.Value.page;
+            int pageIndex = _pageSettings.Value.page;
             int pageSize = _pageSettings.Value.pageSize;
 
-            var stf = await _staffRepository.ListAsync();
+            Expression<Func<Staff, Guid>> orderBy = x => x.Id;
+            var pageResult = await _mainRepository.PageListAsync<Guid>(orderBy, pageIndex, pageSize);
 
-            var model = new StaffListViewModel
+            var model = new ItemListViewModel<StaffViewModel>
             {
-                StaffViewModels = stf.Select(p => new StaffViewModel
+                ItemViewModels = pageResult.Item1.Select(p => new StaffViewModel
                 {
                     Id = p.Id,
                     No = p.No,
@@ -120,44 +122,45 @@ namespace BPMS02.Areas.Dev.Controllers
                     JobTitle = (JobTitle)(p.JobTitle),
                     Education = (Education)(p.Education),
                     HiredDate = p.HiredDate
-                }).OrderBy(p => p.Id).Skip((page - 1) * pageSize).Take(pageSize),
+                }),
 
                 PagingInfo = new PagingInfo
                 {
-                    CurrentPage = page,
+                    CurrentPage = pageIndex,
                     ItemsPerPage = pageSize,
-                    TotalItems = stf.Count()
+                    TotalItems = pageResult.Item2
                 }
 
             };
 
-            return PartialView("~/Views/Shared/StaffListPartial.cshtml", model);
+            return PartialView("StaffListPartial", model);
         }
 
         //参考《精通ASP.NET MVC5》P156
         [HttpPost]
         public async Task<PartialViewResult> List(StaffListViewModel vm)
         {
-            int page;
+            int pageIndex;
             int pageSize;
             
             if (ModelState.IsValid  && TryValidateModel(vm.PagingInfo))
             {
-                page = vm.PagingInfo.CurrentPage;
+                pageIndex = vm.PagingInfo.CurrentPage;
                 pageSize = vm.PagingInfo.ItemsPerPage;
             }
             else
             {
-                page = 1;
+                pageIndex = 1;
                 pageSize = 5;
             }
 
 
-            var stf = await _staffRepository.ListAsync();
+            Expression<Func<Staff, Guid>> orderBy = x => x.Id;
+            var pageResult = await _mainRepository.PageListAsync<Guid>(orderBy, pageIndex, pageSize);
 
-            var model = new StaffListViewModel
+            var model = new ItemListViewModel<StaffViewModel>
             {
-                StaffViewModels = stf.Select(p => new StaffViewModel
+                ItemViewModels = pageResult.Item1.Select(p => new StaffViewModel
                 {
                     Id = p.Id,
                     No = p.No,
@@ -169,18 +172,18 @@ namespace BPMS02.Areas.Dev.Controllers
                     JobTitle = (JobTitle)(p.JobTitle),
                     Education = (Education)(p.Education),
                     HiredDate = p.HiredDate
-                }).OrderBy(p => p.Id).Skip((page - 1) * pageSize).Take(pageSize),
+                }),
 
                 PagingInfo = new PagingInfo
                 {
-                    CurrentPage = page,
+                    CurrentPage = pageIndex,
                     ItemsPerPage = pageSize,
-                    TotalItems = stf.Count()
+                    TotalItems = pageResult.Item2
                 }
 
             };
 
-            return PartialView("~/Views/Shared/StaffListPartial.cshtml", model);
+            return PartialView("StaffListPartial", model);
         }
 
         public async Task<PartialViewResult> QueryByNo(int No)
@@ -188,11 +191,11 @@ namespace BPMS02.Areas.Dev.Controllers
             int page=1;
             int pageSize=5;
 
-            var stf =await _staffRepository.QueryByNoAsync(No);
+            var stf =await _mainRepository.QueryByNoAsync(No);
 
-            var model = new StaffListViewModel
+            var model = new ItemListViewModel<StaffViewModel>
             {
-                StaffViewModels = stf.Select(p => new StaffViewModel
+                ItemViewModels = stf.Select(p => new StaffViewModel
                 {
                     Id = p.Id,
                     No = p.No,
@@ -215,7 +218,7 @@ namespace BPMS02.Areas.Dev.Controllers
 
             };
 
-            return PartialView("~/Views/Shared/StaffListPartial.cshtml", model);
+            return PartialView("StaffListPartial", model);
         }
 
         public async Task<PartialViewResult> QueryByName(string Name)
@@ -223,11 +226,11 @@ namespace BPMS02.Areas.Dev.Controllers
             int page = 1;
             int pageSize = 5;
 
-            var stf = await _staffRepository.QueryByNameAsync(Name);
+            var stf = await _mainRepository.QueryByNameAsync(Name);
 
-            var model = new StaffListViewModel
+            var model = new ItemListViewModel<StaffViewModel>
             {
-                StaffViewModels = stf.Select(p => new StaffViewModel
+                ItemViewModels = stf.Select(p => new StaffViewModel
                 {
                     Id = p.Id,
                     No = p.No,
@@ -250,7 +253,7 @@ namespace BPMS02.Areas.Dev.Controllers
 
             };
 
-            return PartialView("~/Views/Shared/StaffListPartial.cshtml", model);
+            return PartialView("StaffListPartial", model);
         }
 
         public async Task<IActionResult> Edit(Guid Id)
@@ -259,7 +262,7 @@ namespace BPMS02.Areas.Dev.Controllers
             {
                 return NotFound();
             }
-            var staffToEdit = await _staffRepository.QueryByIdAsync(Id);
+            var staffToEdit = await _mainRepository.QueryByIdAsync(Id);
 
             var model = new EditStaffViewModel
             {
@@ -289,7 +292,7 @@ namespace BPMS02.Areas.Dev.Controllers
 
             try
             {
-                await _staffRepository.EditAsync(new Staff
+                await _mainRepository.EditAsync(new Staff
                 {
                     Id = model.Id,
                     No = model.No,
@@ -303,7 +306,7 @@ namespace BPMS02.Areas.Dev.Controllers
                     HiredDate = model.HiredDate
                 });
 
-                TempData["message"] = "Edit Successful!";
+                TempData["globalMessage"] = "成功编辑";
             }
             catch (DbUpdateException /* ex */)
             {
@@ -320,15 +323,15 @@ namespace BPMS02.Areas.Dev.Controllers
         {
             try
             {
-                var deletedStaff = await _staffRepository.DeleteStaff(Id);
+                var deletedStaff = await _mainRepository.Delete(Id);
                 if (deletedStaff != null)
                 {
-                    TempData["message"] = string.Format("工号{0}数据已被删除", deletedStaff.No);
+                    TempData["globalMessage"] = string.Format("工号{0}数据已被删除", deletedStaff.No);
                 }
             }
             catch (DbUpdateException /* ex */)
             {
-                TempData["message"] = "删除失败。请重试, 如果该问题仍然存在 " + "请联系系统管理员。";
+                TempData["globalMessage"] = "删除失败。请重试, 如果该问题仍然存在 " + "请联系系统管理员。";
             }
 
             return RedirectToAction(nameof(Index));

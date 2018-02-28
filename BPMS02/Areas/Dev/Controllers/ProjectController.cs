@@ -11,6 +11,7 @@ using BPMS02.IRepository;
 using Microsoft.EntityFrameworkCore;
 using BPMS02.Areas.Dev.Models;
 using BPMS02.Models;
+using System.Linq.Expressions;
 
 namespace BPMS02.Areas.Dev.Controllers
 {
@@ -32,14 +33,15 @@ namespace BPMS02.Areas.Dev.Controllers
         }
         public async Task<PartialViewResult> List()
         {
-            int page = _pageSettings.Value.page;
+            int pageIndex = _pageSettings.Value.page;
             int pageSize = _pageSettings.Value.pageSize;
 
-            var linqVar = await _mainRepository.ListAsync();
+            Expression<Func<Project, Guid>> orderBy = x => x.Id;
+            var pageResult = await _mainRepository.PageListAsync<Guid>(orderBy, pageIndex, pageSize);
 
             var model = new ItemListViewModel<ProjectViewModel>
             {
-                ItemViewModels = linqVar.Select(p => new ProjectViewModel
+                ItemViewModels = pageResult.Item1.Select(p => new ProjectViewModel
                 {
                     Id = p.Id,
                     Name = p.Name,
@@ -60,13 +62,13 @@ namespace BPMS02.Areas.Dev.Controllers
                     ContractId = p.ContractId,
                     BridgeId = p.BridgeId
 
-                }).OrderBy(p => p.Id).Skip((page - 1) * pageSize).Take(pageSize),
+                }),
 
                 PagingInfo = new PagingInfo
                 {
-                    CurrentPage = page,
+                    CurrentPage = pageIndex,
                     ItemsPerPage = pageSize,
-                    TotalItems = linqVar.Count()
+                    TotalItems = pageResult.Item2
                 }
 
             };
@@ -77,25 +79,27 @@ namespace BPMS02.Areas.Dev.Controllers
         [HttpPost]
         public async Task<PartialViewResult> List(PagingInfo pagingInfo)
         {
-            int page;
+            int pageIndex;
             int pageSize;
 
             if (ModelState.IsValid && TryValidateModel(pagingInfo))
             {
-                page = pagingInfo.CurrentPage;
+                pageIndex = pagingInfo.CurrentPage;
                 pageSize = pagingInfo.ItemsPerPage;
             }
             else
             {
-                page = 1;
+                pageIndex = 1;
                 pageSize = 5;
             }
 
-            var linqVar = await _mainRepository.ListAsync();
+            Expression<Func<Project, Guid>> orderBy = x => x.Id;
+            var pageResult = await _mainRepository.PageListAsync<Guid>(orderBy, pageIndex, pageSize);
+
 
             var model = new ItemListViewModel<ProjectViewModel>
             {
-                ItemViewModels = linqVar.Select(p => new ProjectViewModel
+                ItemViewModels = pageResult.Item1.Select(p => new ProjectViewModel
                 {
                     Id = p.Id,
                     Name = p.Name,
@@ -116,13 +120,13 @@ namespace BPMS02.Areas.Dev.Controllers
                     ContractId = p.ContractId,
                     BridgeId = p.BridgeId
 
-                }).OrderBy(p => p.Id).Skip((page - 1) * pageSize).Take(pageSize),
+                }),
 
                 PagingInfo = new PagingInfo
                 {
-                    CurrentPage = page,
+                    CurrentPage = pageIndex,
                     ItemsPerPage = pageSize,
-                    TotalItems = linqVar.Count()
+                    TotalItems = pageResult.Item2
                 }
 
             };
@@ -186,7 +190,7 @@ namespace BPMS02.Areas.Dev.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Query(ProjectQuery projectQuery)
+        public async Task<IActionResult> Query(ProjectQuery projectQuery)
         {
             int page = _pageSettings.Value.page;
             int pageSize = _pageSettings.Value.pageSize;
@@ -214,14 +218,14 @@ namespace BPMS02.Areas.Dev.Controllers
             }
             //var linq1 =await _mainRepository.Projects;
 
-            var linqVar = _mainRepository.Projects.Result.Where(p => p.Name.Contains(nameQuery))
+            var linqVar =_mainRepository.EntityItems.Where(p => p.Name.Contains(nameQuery))
                 .Where(p => (p.EnterDate > projectQuery.EnterDateAfter && p.EnterDate < projectQuery.EnterDateBefore))
                 .Where(p => (p.SiteFinishedDate > projectQuery.SiteFinishedDateAfter && p.SiteFinishedDate < projectQuery.SiteFinishedDateBefore))
                 .Where(p => (p.ReportProgress >= ReportProgressLowerBound && p.ReportProgress <= ReportProgressUpperBound));
 
             var model = new ItemListViewModel<ProjectViewModel>
             {
-                ItemViewModels = linqVar.Select(p => new ProjectViewModel
+                ItemViewModels = await linqVar.Select(p => new ProjectViewModel
                 {
                     Id = p.Id,
                     Name = p.Name,
@@ -242,7 +246,7 @@ namespace BPMS02.Areas.Dev.Controllers
                     ContractId = p.ContractId,
                     BridgeId = p.BridgeId
 
-                }).OrderBy(p => p.Id).Skip((page - 1) * pageSize).Take(pageSize),
+                }).OrderBy(p => p.Id).Skip((page - 1) * pageSize).Take(pageSize).ToAsyncEnumerable().ToList(),
 
                 PagingInfo = new PagingInfo
                 {

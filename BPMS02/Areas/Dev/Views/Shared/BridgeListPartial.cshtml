@@ -2,12 +2,12 @@
     For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 *@
 
-@model BPMS02.Areas.Dev.Models.BridgeListViewModel
+@model BPMS02.Areas.Dev.Models.ItemListViewModel<BridgeViewModel>
 
 @{
     int i = 1;
 
-    var headerMetadata = Model.BridgeViewModels.FirstOrDefault();
+    var headerMetadata = Model.ItemViewModels.FirstOrDefault();
 
 }
 
@@ -39,7 +39,7 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model.BridgeViewModels)
+        @foreach (var item in Model.ItemViewModels)
         {
         <tr>
             <td>

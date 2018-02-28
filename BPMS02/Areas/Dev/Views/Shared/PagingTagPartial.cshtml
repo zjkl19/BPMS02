@@ -1,7 +1,7 @@
 ﻿@*
     分页标签分布视图
 *@
-@model BPMS02.Areas.Dev.Models.PagingInfo
+@model PagingInfo
 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 <!-- Input and Submit elements -->
         每页显示<input asp-for="ItemsPerPage" style="width:50px"> 条,当前第@{@Html.DisplayFor(p => p.CurrentPage)}页,共@{@Html.DisplayFor(p => p.TotalItems)}条记录,共@{@Html.DisplayFor(p => p.TotalPages)}页, 第<input asp-for="CurrentPage" style="width:50px"> 页,<button type="submit">Go</button>

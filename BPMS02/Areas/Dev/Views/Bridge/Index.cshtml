@@ -17,7 +17,7 @@
 
 
 <div class="row">
-   @Html.Partial("BridgeQueryPartial", new BPMS02.Areas.Dev.Models.BridgeQuery())
+   @Html.Partial("BridgeQueryPartial", new BridgeQuery())
 </div>
 <div class="clearfix" style="margin-bottom: 10px;"></div>
 
@@ -25,7 +25,7 @@
     <form asp-area="Dev" asp-controller="Bridge" asp-action="List"
           data-ajax="true"
           data-ajax-mode="replace"
-          data-ajax-loading="#loading"
+          data-ajax-loading="#globalLoading"
           data-ajax-loading-duration=1000
           data-ajax-update="#ajaxBridgeBody"
           method="get">

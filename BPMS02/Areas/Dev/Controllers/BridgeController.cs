@@ -11,18 +11,19 @@ using BPMS02.IRepository;
 using Microsoft.EntityFrameworkCore;
 using BPMS02.Areas.Dev.Models;
 using BPMS02.Models;
+using System.Linq.Expressions;
 
 namespace BPMS02.Areas.Dev.Controllers
 {
     [Area("Dev")]
     public class BridgeController : Controller
     {
-        private IBridgeRepository _bridgeRepository;
+        private IBridgeRepository _mainRepository;
         private readonly IOptions<PageSettings> _pageSettings;
 
-        public BridgeController(IBridgeRepository bridgeRepository, IOptions<PageSettings> pageSettings)
+        public BridgeController(IBridgeRepository mainRepository, IOptions<PageSettings> pageSettings)
         {
-            _bridgeRepository = bridgeRepository;
+            _mainRepository = mainRepository;
             _pageSettings = pageSettings;
         }
 
@@ -31,29 +32,31 @@ namespace BPMS02.Areas.Dev.Controllers
 
         public async Task<PartialViewResult> List()
         {
-            int page = _pageSettings.Value.page;
+            int pageIndex = _pageSettings.Value.page;
             int pageSize = _pageSettings.Value.pageSize;
 
-            var bdg = await _bridgeRepository.ListAsync();
+            Expression<Func<Bridge, Guid>> orderBy = x => x.Id;
+            var pageResult = await _mainRepository.PageListAsync<Guid>(orderBy, pageIndex, pageSize);
 
-            var model = new BridgeListViewModel
+
+            var model = new ItemListViewModel<BridgeViewModel>
             {
-                BridgeViewModels = bdg.Select(p => new BridgeViewModel
+                ItemViewModels =pageResult.Item1.Select(p => new BridgeViewModel
                 {
-                    Id=p.Id,
+                    Id = p.Id,
                     Name = p.Name,
                     Width = p.Width,
                     Length = p.Length,
                     SpanNumber = p.SpanNumber,
                     StructureType = (StructureType)p.StructureType,
                     Comment = p.Comment
-                }).OrderBy(p => p.Id).Skip((page - 1) * pageSize).Take(pageSize),
+                }),
 
                 PagingInfo = new PagingInfo
                 {
-                    CurrentPage = page,
+                    CurrentPage = pageIndex,
                     ItemsPerPage = pageSize,
-                    TotalItems = bdg.Count()
+                    TotalItems =pageResult.Item2,
                 }
 
             };
@@ -64,25 +67,27 @@ namespace BPMS02.Areas.Dev.Controllers
         [HttpPost]
         public async Task<PartialViewResult> List(PagingInfo pagingInfo)
         {
-            int page;
+            int pageIndex;
             int pageSize;
 
             if (ModelState.IsValid && TryValidateModel(pagingInfo))
             {
-                page = pagingInfo.CurrentPage;
+                pageIndex = pagingInfo.CurrentPage;
                 pageSize = pagingInfo.ItemsPerPage;
             }
             else
             {
-                page = 1;
+                pageIndex = 1;
                 pageSize = 5;
             }
 
-            var bdg = await _bridgeRepository.ListAsync();
+            Expression<Func<Bridge, Guid>> orderBy = x => x.Id;
+            var pageResult = await _mainRepository.PageListAsync<Guid>(orderBy, pageIndex, pageSize);
 
-            var model = new BridgeListViewModel
+
+            var model = new ItemListViewModel<BridgeViewModel>
             {
-                BridgeViewModels = bdg.Select(p => new BridgeViewModel
+                ItemViewModels = pageResult.Item1.Select(p => new BridgeViewModel
                 {
                     Id = p.Id,
                     Name = p.Name,
@@ -91,13 +96,13 @@ namespace BPMS02.Areas.Dev.Controllers
                     SpanNumber = p.SpanNumber,
                     StructureType = (StructureType)p.StructureType,
                     Comment = p.Comment
-                }).OrderBy(p => p.Id).Skip((page - 1) * pageSize).Take(pageSize),
+                }),
 
                 PagingInfo = new PagingInfo
                 {
-                    CurrentPage = page,
+                    CurrentPage = pageIndex,
                     ItemsPerPage = pageSize,
-                    TotalItems = bdg.Count()
+                    TotalItems = pageResult.Item2,
                 }
 
             };
@@ -108,14 +113,14 @@ namespace BPMS02.Areas.Dev.Controllers
 
         public async Task<PartialViewResult> QueryByName(string Name)
         {
-            int page = 1;
+            int pageIndex = 1;
             int pageSize = 5;
 
-            var varQuery = await _bridgeRepository.QueryByNameAsync(Name);
+            var varQuery = await _mainRepository.QueryByNameAsync(Name);
 
-            var model = new BridgeListViewModel
+            var model = new ItemListViewModel<BridgeViewModel>
             {
-                BridgeViewModels = varQuery.Select(p => new BridgeViewModel
+                ItemViewModels = varQuery.Select(p => new BridgeViewModel
                 {
                     Id = p.Id,
                     Name = p.Name,
@@ -124,11 +129,11 @@ namespace BPMS02.Areas.Dev.Controllers
                     SpanNumber = p.SpanNumber,
                     StructureType = (StructureType)p.StructureType,
                     Comment = p.Comment
-                }).OrderBy(p => p.Id).Skip((page - 1) * pageSize).Take(pageSize),
+                }).OrderBy(p => p.Id).Skip((pageIndex - 1) * pageSize).Take(pageSize),
 
                 PagingInfo = new PagingInfo
                 {
-                    CurrentPage = page,
+                    CurrentPage = pageIndex,
                     ItemsPerPage = pageSize,
                     TotalItems = varQuery.Count()
                 }
@@ -160,7 +165,7 @@ namespace BPMS02.Areas.Dev.Controllers
 
             try
             {
-                await _bridgeRepository.CreateAsync(new Bridge
+                await _mainRepository.CreateAsync(new Bridge
                 {
                     Id = Guid.NewGuid(),
                     Name=model.Name,
@@ -171,7 +176,7 @@ namespace BPMS02.Areas.Dev.Controllers
                     Comment=model.Comment
                 });
 
-                TempData["message"] = "成功创建：" + model.Name+"";
+                TempData["globalMessage"] = "成功创建：" + model.Name+"";
 
                 return RedirectToAction(nameof(Index));
             }
@@ -188,7 +193,7 @@ namespace BPMS02.Areas.Dev.Controllers
             {
                 return NotFound();
             }
-            var varToEdit = await _bridgeRepository.QueryByIdAsync(Id);
+            var varToEdit = await _mainRepository.QueryByIdAsync(Id);
 
             var model = new EditBridgeViewModel
             {
@@ -217,7 +222,7 @@ namespace BPMS02.Areas.Dev.Controllers
 
             try
             {
-                await _bridgeRepository.EditAsync(new Bridge
+                await _mainRepository.EditAsync(new Bridge
                 {
                     Id = Id,
                     Name = model.Name,
@@ -228,7 +233,7 @@ namespace BPMS02.Areas.Dev.Controllers
                     Comment = model.Comment
                 });
 
-                TempData["message"] = "Edit Successful!";
+                TempData["globalMessage"] = "修改成功";
 
                 return RedirectToAction(nameof(Index));
             }
@@ -246,10 +251,10 @@ namespace BPMS02.Areas.Dev.Controllers
         {
             try
             {
-                var varDeleted = await _bridgeRepository.Delete(Id);
+                var varDeleted = await _mainRepository.Delete(Id);
                 if (varDeleted != null)
                 {
-                    TempData["message"] = string.Format("{0}数据已被删除", varDeleted.Name);
+                    TempData["globalMessage"] = string.Format("{0}数据已被删除", varDeleted.Name);
                 }
 
             }

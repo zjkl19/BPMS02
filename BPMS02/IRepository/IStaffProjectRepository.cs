@@ -6,18 +6,7 @@ using System.Threading.Tasks;
 
 namespace BPMS02.IRepository
 {
-    public interface IStaffProjectRepository
+    public interface IStaffProjectRepository:IBasicCRUDRepository<StaffProject>
     {
-        Task<List<StaffProject>> StaffProjects { get; }
-
-        Task CreateAsync(StaffProject staffProject);
-
-        Task<List<StaffProject>> ListAsync();
-
-        Task<StaffProject> QueryByIdAsync(Guid Id);
-
-        Task EditAsync(StaffProject staffProject);
-
-        Task<StaffProject> Delete(Guid Id);
     }
 }
