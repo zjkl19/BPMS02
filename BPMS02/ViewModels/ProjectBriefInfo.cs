@@ -12,8 +12,8 @@ namespace BPMS02.ViewModels
         [Display(Name = "项目数量")]
         public int TotalItems { get; set; }
         [Display(Name = "标准产值")]
-        public int TotalStdValue { get; set; }
+        public decimal? TotalStdValue { get; set; }
         [Display(Name = "计算产值")]
-        public int TotalCalcValue { get; set; }
+        public decimal? TotalCalcValue { get; set; }
     }
 }

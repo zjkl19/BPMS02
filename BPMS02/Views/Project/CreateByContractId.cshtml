@@ -2,32 +2,41 @@
 @{
     ViewData["Title"] = "CreateByContractId";
 }
-<h2>CreateByContractId</h2>
+<script>
+    $(document).ready(function () {
+        $('#chooseButton').on('click', function () {
+            Id = $(":input:radio:checked").map(function () {
+                return $(this).parent().siblings('td').eq(0).text();
+            }).get();
 
+            Name = $(":input:radio:checked").map(function () {
+                return $(this).parent().siblings('td').eq(2).text();
+            }).get();
+
+
+            $("#BridgeId").attr("value", $.trim(Id));
+            $("#BridgeName").attr("value", Name);
+            console.log(Id)
+            console.log(Name)
+
+        });
+    });
+
+</script>
+
+<h2>新建项目</h2>
+<div>
+<label asp-for="ContractName" class="control-label"></label> @Html.DisplayFor(x=>x.ContractName)
+ </div>
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
+        <form asp-action="CreateByContractId">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
                 <input asp-for="Name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CreateTime" class="control-label"></label>
-                <input asp-for="CreateTime" class="form-control" />
-                <span asp-validation-for="CreateTime" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="StandardValue" class="control-label"></label>
-                <input asp-for="StandardValue" class="form-control" />
-                <span asp-validation-for="StandardValue" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CalcValue" class="control-label"></label>
-                <input asp-for="CalcValue" class="form-control" />
-                <span asp-validation-for="CalcValue" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="EnterProgress" class="control-label"></label>
@@ -70,33 +79,57 @@
                 <span asp-validation-for="ReportPublishedDate" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="DelayDays" class="control-label"></label>
-                <input asp-for="DelayDays" class="form-control" />
-                <span asp-validation-for="DelayDays" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="DelayRate" class="control-label"></label>
-                <input asp-for="DelayRate" class="form-control" />
-                <span asp-validation-for="DelayRate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
                 <label asp-for="ProjectProgressExplanation" class="control-label"></label>
                 <textarea asp-for="ProjectProgressExplanation" class="form-control" /></textarea>
                 <span asp-validation-for="ProjectProgressExplanation" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ContractId" class="control-label"></label>
-                <input asp-for="ContractId" class="form-control" />
+
+                <input asp-for="ContractId" class="form-control" hidden />
                 <span asp-validation-for="ContractId" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="BridgeId" class="control-label"></label>
-                <input asp-for="BridgeId" class="form-control" />
+                <input type="button" data-toggle="modal" data-target="#select_id" value="选择桥梁" />
+                <input asp-for="BridgeId" class="form-control" hidden />
                 <span asp-validation-for="BridgeId" class="text-danger"></span>
+                <label asp-for="BridgeName" class="control-label"></label><input asp-for="BridgeName" class="form-control" readonly />
             </div>
             <div class="form-group">
                 <input type="submit" value="创建" class="btn btn-default" />
             </div>
         </form>
+    </div>
+</div>
+
+<div class="modal fade" id="select_id" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                <h4 class="modal-title" id="myModalLabel">请选择</h4>
+
+            </div>
+
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        @Html.Partial("BridgeSelectQueryPartial", new BridgeSelectQuery())
+                    </div>
+                    <div id="ajaxSelectBridgeBody" class="row">
+
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div style="display: inline-block">
+                    <button id="chooseButton" class="btn btn-primary" data-dismiss="modal" data-whatever="">选择</button>
+                </div>
+                <div style="display: inline-block">
+                    <button class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+
+
+        </div>
     </div>
 </div>

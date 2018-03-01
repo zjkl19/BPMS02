@@ -8,19 +8,22 @@ using System.Threading.Tasks;
 
 namespace BPMS02.ViewModels
 {
-    public class ProjectBriefViewModel
+    public class ProjectInspectionTypeViewModel
     {
-        [HiddenInput]
+        [ScaffoldColumn(false)]
         public Guid Id { get; set; }
 
+        [HiddenInput]
+        public Guid ProjectId { get; set; }
+
         [Display(Name = "项目名称")]
-        public string Name { get; set; }
+        public string ProjectName { get; set; }
 
-        [Display(Name = "项目类型")]
-        public string InspectionType { get; set; }
+        [HiddenInput]
+        public Guid InspectionTypeId { get; set; }
 
-        [Display(Name = "关联桥梁")]
-        public string BridgeName { get; set; }
+        [Display(Name = "检测类型名称")]
+        public string InspectionTypeName { get; set; }
 
         [Display(Name = "标准产值")]
         [Column(TypeName = "money")]
@@ -29,5 +32,7 @@ namespace BPMS02.ViewModels
         [Display(Name = "计算产值")]
         [Column(TypeName = "money")]
         public decimal? CalcValue { get; set; }
+
+
     }
 }

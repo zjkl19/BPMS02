@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace BPMS02.ViewModels
 {
 
-    public class StaffProjectViewModel
+    public class CreateStaffProjectViewModel
     {
         /// <summary>
         /// 指的是StaffProjects表中对应的Id
@@ -42,14 +42,10 @@ namespace BPMS02.ViewModels
         [Display(Name = "项目名称")]
         public string ProjectName { get; set; }
 
-        /// <summary>
-        /// 项目标准产值
-        /// </summary>
+        [Display(Name = "项目标准产值")]
         public decimal? ProjectStdValue { get; set; }
 
-        /// <summary>
-        /// 项目计算产值
-        /// </summary>
+        [Display(Name = "项目计算产值")]
         public decimal? ProjectCalcValue { get; set; }
     }
 }

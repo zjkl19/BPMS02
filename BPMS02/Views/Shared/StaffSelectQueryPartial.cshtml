@@ -8,7 +8,7 @@
 <form asp-area="" asp-controller="Staff" asp-action="QueryByNo"  
       data-ajax="true"
       data-ajax-mode="replace"
-      data-ajax-loading="#loading"
+      data-ajax-loading="#localLoading"
       data-ajax-loading-duration=1000
       data-ajax-update="#ajaxSelectStaffBody" 
       method="post">
@@ -21,7 +21,7 @@
     <form  asp-area="" asp-controller="Staff" asp-action="QueryByName"
           data-ajax="true"
           data-ajax-mode="replace"
-          data-ajax-loading="#loading"
+          data-ajax-loading="#localLoading"
           data-ajax-loading-duration=1000
           data-ajax-update="#ajaxSelectStaffBody"
           method="post">
@@ -33,7 +33,7 @@
     <form  asp-area="" asp-controller="Staff" asp-action="List"
           data-ajax="true"
           data-ajax-mode="replace"
-          data-ajax-loading="#loading"
+          data-ajax-loading="#localLoading"
           data-ajax-loading-duration=1000
           data-ajax-update="#ajaxSelectStaffBody"
           method="get">

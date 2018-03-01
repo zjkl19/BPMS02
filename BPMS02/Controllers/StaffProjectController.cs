@@ -9,6 +9,7 @@ using BPMS02.Data;
 using Microsoft.Extensions.Options;
 using BPMS02.IRepository;
 using BPMS02.ViewModels;
+using BPMS02.Models;
 
 namespace BPMS02.Controllers
 {
@@ -17,13 +18,15 @@ namespace BPMS02.Controllers
         private IStaffProjectRepository _mainRepository;
         private IStaffRepository _staffRepository;
         private IProjectRepository _projectRepository;
+        private IProjectInspectionTypeRepository _projectInspectionTypeRepository;
         private readonly IOptions<PageSettings> _pageSettings;
 
-        public StaffProjectController(IStaffProjectRepository mainRepository, IStaffRepository staffRepository, IProjectRepository projectRepository, IOptions<PageSettings> pageSettings)
+        public StaffProjectController(IStaffProjectRepository mainRepository, IStaffRepository staffRepository, IProjectRepository projectRepository, IProjectInspectionTypeRepository projectInspectionTypeRepository,IOptions<PageSettings> pageSettings)
         {
             _mainRepository = mainRepository;
             _staffRepository = staffRepository;
             _projectRepository = projectRepository;
+            _projectInspectionTypeRepository=projectInspectionTypeRepository;
             _pageSettings = pageSettings;
         }
 
@@ -50,8 +53,9 @@ namespace BPMS02.Controllers
                               StaffName = q.Name,
                               Labor = (Labor)p.Labor,
                               Ratio = p.Ratio,
-                              StandardValue = p.StandardValue,
-                              CalcValue = p.CalcValue,
+                              StandardValue = (p.Ratio)*_projectInspectionTypeRepository.GetStdValueByProjectId(p.ProjectId),
+                              CalcValue = (p.Ratio) * _projectInspectionTypeRepository.GetCalcValueByProjectId(p.ProjectId),
+
                           }).ToAsyncEnumerable().ToList();
 
             var re = await _projectRepository.QueryByIdAsync(Id);
@@ -73,8 +77,43 @@ namespace BPMS02.Controllers
             return View();
         }
 
-        public IActionResult CreateByProjectId(Guid Id)
+        public async Task<IActionResult> CreateByProjectId(Guid Id)
         {
+            var linqVar = await _projectRepository.QueryByIdAsync(Id);
+            var model = new CreateStaffProjectViewModel{
+                ProjectId=Id,
+                ProjectName= linqVar.Name,
+                ProjectStdValue=_projectInspectionTypeRepository.GetStdValueByProjectId(Id),
+                ProjectCalcValue= _projectInspectionTypeRepository.GetCalcValueByProjectId(Id)
+            };
+            return View(model);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateByProjectId(CreateStaffProjectViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                await _mainRepository.CreateAsync(new StaffProject
+                {
+                    Id = Guid.NewGuid(),
+                    Labor=(int)model.Labor,
+                    Ratio=model.Ratio,
+                    ProjectId=model.ProjectId,
+                    StaffId=model.StaffId,
+                });
+
+                TempData["globalMessage"] = "成功创建职工参与信息" ;
+                
+            }
+            catch(Exception ex)
+            {
+                throw (ex);
+            }
             return View();
         }
 

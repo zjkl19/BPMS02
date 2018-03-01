@@ -40,9 +40,9 @@ namespace BPMS02.Controllers
             Expression<Func<Staff, Guid>> orderBy = x => x.Id;
             var pageResult = await _mainRepository.PageListAsync<Guid>(orderBy, pageIndex, pageSize);
 
-            var model = new StaffSelectListViewModel
+            var model = new ItemListViewModel<StaffSelectViewModel>
             {
-                StaffSelectViewModels = pageResult.Item1.Select(p => new StaffSelectViewModel
+                ItemViewModels = pageResult.Item1.Select(p => new StaffSelectViewModel
                 {
                     Id = p.Id,
                     No = p.No,
@@ -84,9 +84,9 @@ namespace BPMS02.Controllers
             Expression<Func<Staff, Guid>> orderBy = x => x.Id;
             var pageResult = await _mainRepository.PageListAsync<Guid>(orderBy, pageIndex, pageSize);
 
-            var model = new StaffSelectListViewModel
+            var model = new ItemListViewModel<StaffSelectViewModel>
             {
-                StaffSelectViewModels = pageResult.Item1.Select(p => new StaffSelectViewModel
+                ItemViewModels = pageResult.Item1.Select(p => new StaffSelectViewModel
                 {
                     Id = p.Id,
                     No = p.No,
@@ -114,9 +114,9 @@ namespace BPMS02.Controllers
 
             var stf = await _mainRepository.QueryByNoAsync(No);
 
-            var model = new StaffSelectListViewModel
+            var model = new ItemListViewModel<StaffSelectViewModel>
             {
-                StaffSelectViewModels = stf.Select(p => new StaffSelectViewModel
+                ItemViewModels = stf.Select(p => new StaffSelectViewModel
                 {
                     Id = p.Id,
                     No = p.No,
@@ -144,9 +144,9 @@ namespace BPMS02.Controllers
 
             var stf = await _mainRepository.QueryByNameAsync(Name);
 
-            var model = new StaffSelectListViewModel
+            var model = new ItemListViewModel<StaffSelectViewModel>
             {
-                StaffSelectViewModels = stf.Select(p => new StaffSelectViewModel
+                ItemViewModels = stf.Select(p => new StaffSelectViewModel
                 {
                     Id = p.Id,
                     No = p.No,

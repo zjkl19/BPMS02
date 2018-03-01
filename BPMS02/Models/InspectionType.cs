@@ -18,6 +18,11 @@ namespace BPMS02.Models
         public int Type { get; set; }
 
         /// <summary>
+        /// 检测类型名称
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
         /// 1种检测类型可以在n个项目中使用
         /// </summary>
         public virtual ICollection<ProjectInspectionType> ProjectInspectionTypes { get; set; }

@@ -170,18 +170,11 @@ namespace BPMS02.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
-                    ProjectId = table.Column<Guid>(nullable: true),
                     Type = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_InspectionTypes", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_InspectionTypes_Projects_ProjectId",
-                        column: x => x.ProjectId,
-                        principalTable: "Projects",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -250,10 +243,6 @@ namespace BPMS02.Migrations
                 table: "Contracts",
                 column: "ResponseStaffId");
 
-            migrationBuilder.CreateIndex(
-                name: "IX_InspectionTypes_ProjectId",
-                table: "InspectionTypes",
-                column: "ProjectId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_InvoiceDetails_InvoiceId",

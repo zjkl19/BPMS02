@@ -1,12 +1,61 @@
-﻿@model StaffProjectViewModel
-
+﻿@model CreateStaffProjectViewModel
 @{
     ViewData["Title"] = "CreateByProjectId";
 }
 
-<h2>CreateByProjectId</h2>
 
+
+<script>
+    $(document).ready(function () {
+        $('#chooseButton').on('click', function () {
+            Id = $(":input:radio:checked").map(function () {
+                return $(this).parent().siblings('td').eq(0).text();
+            }).get();
+
+            No = $(":input:radio:checked").map(function () {
+                return $(this).parent().siblings('td').eq(2).text();
+            }).get();
+
+            Name = $(":input:radio:checked").map(function () {
+                return $(this).parent().siblings('td').eq(3).text();
+            }).get();
+
+
+            $("#StaffId").attr("value", $.trim(Id));
+            $("#StaffName").attr("value", Name);
+            console.log(Id)
+            console.log(No)
+            console.log(Name)
+
+        });
+    });
+
+</script>
+<script>
+    $(document).ready(function () {
+        $("input").blur(function () {
+            $("#StandardValue").attr("value", $("#ProjectStdValueDisplay").text() * $("#Ratio").val());
+            $("#CalcValue").attr("value", $("#ProjectCalcValueDisplay").text() * $("#Ratio").val());
+        });
+        //console.log("Value testing...")
+    });
+</script>
+<h2>CreateByProjectId</h2>
 <h4>StaffProject</h4>
+
+<div>
+    <label asp-for="ProjectName" class="control-label"></label>
+    <div>@Html.DisplayFor(x => x.ProjectName)</div>
+</div>
+<div>
+    <label asp-for="ProjectStdValue" class="control-label"></label><div id="ProjectStdValueDisplay">@Html.DisplayFor(x => x.ProjectStdValue)</div>
+</div>
+<div>
+    <label asp-for="ProjectCalcValue" class="control-label"></label>
+    <div id="ProjectCalcValueDisplay">
+        @Html.DisplayFor(x => x.ProjectCalcValue)
+    </div>
+</div>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -14,9 +63,10 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Labor" class="control-label"></label>
-                <input asp-for="Labor" class="form-control" />
+                <select asp-for="Labor" asp-items="Html.GetEnumSelectList<Labor>()" class="form-control"></select>
                 <span asp-validation-for="Labor" class="text-danger"></span>
             </div>
+
             <div class="form-group">
                 <label asp-for="Ratio" class="control-label"></label>
                 <input asp-for="Ratio" class="form-control" />
@@ -24,21 +74,23 @@
             </div>
             <div class="form-group">
                 <label asp-for="StandardValue" class="control-label"></label>
-                <input asp-for="StandardValue" class="form-control" />
+                <input asp-for="StandardValue" class="form-control" readonly />
                 <span asp-validation-for="StandardValue" class="text-danger"></span>
             </div>
+
             <div class="form-group">
                 <label asp-for="CalcValue" class="control-label"></label>
-                <input asp-for="CalcValue" class="form-control" />
+                <input asp-for="CalcValue" class="form-control" readonly />
                 <span asp-validation-for="CalcValue" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="StaffId" class="control-label"></label>
-                <select asp-for="StaffId" class ="form-control" asp-items="ViewBag.StaffId"></select>
+                <input asp-for="StaffId" class="form-control" hidden />
+                <label asp-for="StaffName" class="control-label"></label>
+                <input id="selectButton" type="button" data-toggle="modal" data-target="#select_id" value="选择职工" />
+                <input asp-for="StaffName" class="form-control" readonly />
             </div>
             <div class="form-group">
-                <label asp-for="ProjectId" class="control-label"></label>
-                <select asp-for="ProjectId" class ="form-control" asp-items="ViewBag.ProjectId"></select>
+                <input asp-for="ProjectId" class="form-control" hidden />
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-default" />
@@ -50,4 +102,35 @@
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
+<div class="modal fade" id="select_id" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                <h4 class="modal-title" id="myModalLabel">请选择</h4>
 
+            </div>
+
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        @Html.Partial("StaffSelectQueryPartial", new StaffSelectQuery())
+                    </div>
+                    <div id="ajaxSelectStaffBody" class="row">
+
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div style="display: inline-block">
+                    <button id="chooseButton" class="btn btn-primary" data-dismiss="modal" data-whatever="">选择</button>
+                </div>
+                <div style="display: inline-block">
+                    <button class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</div>

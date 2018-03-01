@@ -6,9 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace BPMS02.Areas.Dev.Models
+namespace BPMS02.ViewModels
 {
-    public class BridgeViewModel
+    public class BridgeSelectViewModel
     {
         [ScaffoldColumn(false)]
         public Guid Id { get; set; }

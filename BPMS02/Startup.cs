@@ -40,6 +40,9 @@ namespace BPMS02
             services.AddScoped<IBridgeRepository, BridgeRepository>();
             services.AddScoped<IProjectRepository, ProjectRepository>();
             services.AddScoped<IStaffProjectRepository, StaffProjectRepository>();
+            services.AddScoped<IProjectInspectionTypeRepository,ProjectInspectionTypeRepository>();
+            services.AddScoped<IInspectionTypeRepository, InspectionTypeRepository>();
+            
 
             services.AddMvc();
         }

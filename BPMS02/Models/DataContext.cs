@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 
 using Microsoft.EntityFrameworkCore;
 using BPMS02.Areas.Dev.Models;
+using BPMS02.ViewModels;
 
 namespace BPMS02.Models
 {
@@ -24,6 +25,7 @@ namespace BPMS02.Models
         public virtual DbSet<StaffProject> StaffProjects { get; set; }
         public virtual DbSet<InspectionType> InspectionTypes { get; set; }
         public virtual DbSet<ProjectInspectionType> ProjectInspectionTypes { get; set; }
+        public DbSet<BPMS02.ViewModels.ProjectInspectionTypeViewModel> ProjectInspectionTypeViewModel { get; set; }
         
     }
 }

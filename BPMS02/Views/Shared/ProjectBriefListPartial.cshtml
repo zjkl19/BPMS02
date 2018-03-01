@@ -19,7 +19,16 @@
                 @Html.DisplayNameFor(model => headerMetadata.Name)
             </th>
             <th>
+                @Html.DisplayNameFor(model => headerMetadata.InspectionType)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => headerMetadata.BridgeName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => headerMetadata.StandardValue)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => headerMetadata.CalcValue)
             </th>
             <th></th>
         </tr>
@@ -27,32 +36,43 @@
     <tbody>
         @foreach (var item in Model.ProjectBriefViewModels)
         {
-            <tr>
-                <td>
-                    @i
-                    @{
-                        i++;
-                    }
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.BridgeName)
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a> |
-                    <a asp-controller="StaffProject" asp-action="ListByProjectId" asp-route-id="@item.Id" data-ajax="true"
-                       data-ajax-mode="replace"
-                       data-ajax-loading="#globalLoading"
-                       data-ajax-loading-duration=1000
-                       data-ajax-update="#ajaxProjectStaffProjectBody"
-                       method="get">参与人员</a>
+        <tr>
+            <td>
+                @i
+                @{
+            i++;
+                }
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.Raw(item.InspectionType)
+                <a asp-controller="ProjectInspectionType" asp-action="QueryByProjectId" asp-route-id="@item.Id">查看详情</a>
+                <a asp-controller="ProjectInspectionType" asp-action="CreateByProjectId" asp-route-id="@item.Id">添加类型</a>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.BridgeName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StandardValue)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CalcValue)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a> |
+                <a asp-controller="StaffProject" asp-action="ListByProjectId" asp-route-id="@item.Id" data-ajax="true"
+                   data-ajax-mode="replace"
+                   data-ajax-loading="#globalLoading"
+                   data-ajax-loading-duration=1000
+                   data-ajax-update="#ajaxProjectStaffProjectBody"
+                   method="get">参与人员</a>
 
-                </td>
-            </tr>
+            </td>
+        </tr>
         }
     </tbody>
 </table>
@@ -69,4 +89,8 @@
     标准产值：@Model.ProjectBriefInfo.TotalStdValue
     <br />
     计算产值：@Model.ProjectBriefInfo.TotalCalcValue
+</div>
+<div id="ajaxProjectStaffProjectBody" class="row">
+    <!-- Get  StaffProject/ListByProjectId   -->
+    <!-- View ProjectStaffProjectListPartial -->
 </div>
