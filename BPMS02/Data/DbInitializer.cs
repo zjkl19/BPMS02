@@ -144,10 +144,10 @@ namespace BPMS02.Data
             }
             _context.SaveChanges();
 
-            Contract[] contracts =InitContract(staffs);
-            Bridge[] bridges=InitBridge();
+            Contract[] contracts = InitContract(staffs);
+            Bridge[] bridges = InitBridge();
             Project[] projects = InitProject(contracts, bridges);
-            StaffProject[] staffProjects = InitStaffProject(staffs,projects);
+            StaffProject[] staffProjects = InitStaffProject(staffs, projects);
 
         }
 
@@ -272,7 +272,7 @@ namespace BPMS02.Data
             return bridges;
 
         }
-        public Project[] InitProject(Contract[] contracts,Bridge[] bridges)
+        public Project[] InitProject(Contract[] contracts, Bridge[] bridges)
         {
             _context.Database.EnsureCreated();
 
@@ -359,7 +359,7 @@ namespace BPMS02.Data
             // Look for any students.
             if (_context.StaffProjects.Any())
             {
-                return null;   
+                return null;
             }
             var staffProjects = new StaffProject[]
             {
@@ -393,7 +393,7 @@ namespace BPMS02.Data
                     CalcValue=0,
 
                 },
-                 new StaffProject{
+                new StaffProject{
                     Id=Guid.NewGuid(),
                     StaffId=staffs[2].Id,
                     ProjectId =projects[0].Id,

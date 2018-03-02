@@ -1,0 +1,67 @@
+﻿@model ItemListViewModel<InspectionTypeSelectViewModel>
+@{
+    int i = 1;
+
+    var headerMetadata = Model.ItemViewModels.FirstOrDefault();
+
+}
+
+<h2>InspectionTypeListPartial</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                <!-- RadioBox -->
+            </th>
+            <th>
+                序号
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => headerMetadata.Type)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => headerMetadata.Name)
+            </th>
+
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.ItemViewModels)
+        {
+        <tr>
+            <td>
+                @Html.RadioButtonFor(modelItem => item.Id, false)
+            </td>
+            <td style="display: none">
+                @Html.DisplayFor(modelItem => item.Id)
+            </td>
+            <td>
+                @i
+                @{
+            i++;
+                }
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Type)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+
+        </tr>
+        }
+    </tbody>
+</table>
+<div class="row">
+    <form asp-area="" asp-controller="InspectionType" asp-action="List"
+          data-ajax="true"
+          data-ajax-mode="replace"
+          data-ajax-loading="#globalLoading"
+          data-ajax-loading-duration=1000
+          data-ajax-update="#ajaxBody"
+          method="post">
+        @Html.Partial("PagingTagPartial", Model.PagingInfo)
+    </form>
+
+</div>

@@ -49,7 +49,7 @@
             <td>
                 @Html.Raw(item.InspectionType)
                 <a asp-controller="ProjectInspectionType" asp-action="QueryByProjectId" asp-route-id="@item.Id">查看详情</a>
-                <a asp-controller="ProjectInspectionType" asp-action="CreateByProjectId" asp-route-id="@item.Id">添加类型</a>
+                <a asp-controller="ProjectInspectionType" asp-action="CreateByProjectId" asp-route-id="@item.Id" target="_blank">添加类型</a>
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.BridgeName)

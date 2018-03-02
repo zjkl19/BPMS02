@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BPMS02.Data;
 using BPMS02.IRepository;
+using BPMS02.Models;
 using BPMS02.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -14,11 +15,13 @@ namespace BPMS02.Controllers
     public class ProjectInspectionTypeController : Controller
     {
         private IProjectInspectionTypeRepository _mainRepository;
+        private IProjectRepository _projectRepository;
         private readonly IOptions<PageSettings> _pageSettings;
 
-        public ProjectInspectionTypeController(IProjectInspectionTypeRepository mainRepository, IOptions<PageSettings> pageSettings)
+        public ProjectInspectionTypeController(IProjectInspectionTypeRepository mainRepository, IProjectRepository projectRepository, IOptions<PageSettings> pageSettings)
         {
             _mainRepository = mainRepository;
+            _projectRepository = projectRepository;
             _pageSettings = pageSettings;
         }
 
@@ -33,13 +36,14 @@ namespace BPMS02.Controllers
         {
             return View();
         }
-        public IActionResult CreateByProjectId(Guid Id)
+        public async Task<IActionResult> CreateByProjectId(Guid Id)
         {
+            var linqVar = await _projectRepository.QueryByIdAsync(Id);
             return View(
-                new ProjectInspectionTypeViewModel
+                new CreateProjectInspectionTypeViewModel
                 {
                     ProjectId = Id,
-                    ProjectName="",
+                    ProjectName = linqVar.Name,
                 });
         }
         // GET: ProjectInspectionType/Create
@@ -51,18 +55,34 @@ namespace BPMS02.Controllers
         // POST: ProjectInspectionType/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<IActionResult> CreateByProjectId(CreateProjectInspectionTypeViewModel model)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             try
             {
-                // TODO: Add insert logic here
+                await _mainRepository.CreateAsync(new ProjectInspectionType
+                {
+                    Id = Guid.NewGuid(),
+                    ProjectId = model.ProjectId,
+                    InspectionTypeId = model.InspectionTypeId,
+                    StandardValue = model.StandardValue,
+                    CalcValue = model.CalcValue,
 
-                return RedirectToAction(nameof(Index));
+                });
+
+                TempData["globalMessage"] = "成功为项目:"+model.ProjectName+"添加：" + model.InspectionTypeName + "检测类型";
+
+
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+                throw (ex);
             }
+            return View();
         }
 
         // GET: ProjectInspectionType/Edit/5

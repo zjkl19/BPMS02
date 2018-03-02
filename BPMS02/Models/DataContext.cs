@@ -25,7 +25,6 @@ namespace BPMS02.Models
         public virtual DbSet<StaffProject> StaffProjects { get; set; }
         public virtual DbSet<InspectionType> InspectionTypes { get; set; }
         public virtual DbSet<ProjectInspectionType> ProjectInspectionTypes { get; set; }
-        public DbSet<BPMS02.ViewModels.ProjectInspectionTypeViewModel> ProjectInspectionTypeViewModel { get; set; }
         
     }
 }
